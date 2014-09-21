@@ -1,0 +1,145 @@
+﻿<Page
+    x:Class="UTHPortal.Views.AboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UTHPortal.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    
+    d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
+                        Type={Binding About, Source={StaticResource Locator}}}"
+    DataContext="{Binding About, Source={StaticResource Locator}}"
+    >
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Βαθμολογίστε"
+                          Icon="Favorite"
+                          Command="{Binding RateAppCommand}"
+                          >
+            </AppBarButton>
+            <AppBarButton Label="Feedback"
+                          Icon="MailReply"
+                          Command="{Binding SendFeedBackCommand}"
+                          >
+            </AppBarButton>
+            
+        </CommandBar>
+    </Page.BottomAppBar>
+    
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>-->
+        
+    <!--
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="UTHPortal" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="Σχετικά" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+    -->
+    <ScrollViewer>
+        <StackPanel Grid.Row="1"
+                        Margin="19,0,19,0"
+                        >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="UTHPortal"
+                           Style="{ThemeResource HeaderTextBlockStyle}"
+                           Foreground="{ThemeResource PhoneAccentBrush}"
+                           />
+
+                        <TextBlock Text="v1.0 BETA"
+                           Style="{ThemeResource FlyoutPickerTitleTextBlockStyle}"
+                           />
+                    </StackPanel>
+                </Grid>
+
+                <Image Grid.Column="1"
+                       Margin="0,7,0,0"
+                       Source="/Assets/StoreLogo.scale-240.png"
+                       Width="100"
+                       >
+                </Image>
+            </Grid>
+
+
+            <TextBlock Text="{Binding Description}"
+                       Style="{ThemeResource BaseTextBlockStyle}"
+                       TextWrapping="Wrap"
+                       Margin="0,15,0,0"
+                       >
+            </TextBlock>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel>
+                    <TextBlock Text="Πληροφορίες"
+                               Foreground="{ThemeResource PhoneAccentBrush}"
+                               Style="{ThemeResource ListViewItemTextBlockStyle}"
+                               Margin="0,10,0,0"
+                               >
+                    </TextBlock>  
+                    <HyperlinkButton NavigateUri="http://www.voloshack.tk"
+                                     Margin="5,0,0,0"
+                                     FontSize="20"
+                                     >
+                        <HyperlinkButton.Content>
+                            <TextBlock>
+                                <Underline>
+                                    VolosHack
+                                </Underline>
+                            </TextBlock>
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
+                    <TextBlock Text="Developers"
+                       Foreground="{ThemeResource PhoneAccentBrush}"
+                       Style="{ThemeResource ListViewItemTextBlockStyle}"
+                       Margin="0,10,0,0"
+                       >
+                    </TextBlock>
+                    <TextBlock Text="Κωνσταντίνος Κανελλής"
+                             Margin="5,0,0,0"
+                             FontSize="20"
+                             >
+                    </TextBlock>
+                    <TextBlock Text="Γιώργος Γκουγκούδης"
+                             Margin="5,0,0,0"
+                             FontSize="20"
+                             >
+                    </TextBlock>
+                    <TextBlock Text="+VolosHack Team"
+                             Margin="5,0,0,20"
+                             FontSize="20"
+                             >
+                    </TextBlock>
+                </StackPanel>
+
+                <Image  Grid.Column="1"
+                        Margin="0,30,15,0"
+                    Source="/Assets/opensource_white.png"
+                    HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                    Stretch="UniformToFill"
+                    Width="120"
+                    Height="100"
+                    >
+                </Image>
+            </Grid> 
+
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
