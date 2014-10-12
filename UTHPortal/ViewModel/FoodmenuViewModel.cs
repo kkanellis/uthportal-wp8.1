@@ -84,15 +84,7 @@ namespace UTHPortal.ViewModel
                 /* Get AutoRefresh settings entry */
                 bool AutoRefresh = (bool)_storageService.GetSettingsEntry("AutoRefresh");
 
-                /* Find last monday dateTime */
-                DateTime LastMonday = DateTime.Now.Subtract(TimeSpan.FromDays( ((int)(DateTime.Now.DayOfWeek + 6)%7)));
-
-                bool oldMenuSaved = false;
-                if (SavedViewAvailable && LastMonday.Date != Data.Days[0].Date.Date) {
-                    oldMenuSaved = true;
-                }
-
-                if (!SavedViewAvailable || oldMenuSaved) {
+                if (!SavedViewAvailable || IsOldMenuSaved()) {
                     await _viewService.ShowMessageDialog(
                         "Δεν έχει ανακοινωθεί ακόμα το μενού της λέσχης.",
                         "Μενού λέσχης");
@@ -116,6 +108,16 @@ namespace UTHPortal.ViewModel
                 /* Sunday = 0, so we must convert to Monday = 0 */
                 PivotSelectedIndex = ((int)today + 6) % 7;
             }
+        }
+
+        private bool IsOldMenuSaved() {
+            /* Find last monday dateTime */
+            DateTime LastMonday = DateTime.Now.Subtract(TimeSpan.FromDays(((int)(DateTime.Now.DayOfWeek + 6) % 7)));
+
+            if (SavedViewAvailable && LastMonday.Date != Data.Days[0].Date.Date) {
+                return true;
+            }
+            return false;
         }
     }
 }
