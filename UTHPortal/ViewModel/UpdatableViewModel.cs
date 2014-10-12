@@ -120,7 +120,7 @@ namespace UTHPortal.ViewModel
 
             IsBusy = false;
 
-            ValidateDisplayData();
+            await ValidateDisplayData();
         }
 
         private RelayCommand _pageLoaded;
@@ -155,6 +155,10 @@ namespace UTHPortal.ViewModel
             }
         }
 
-        protected virtual void ValidateDisplayData() { }
+        protected virtual Task ValidateDisplayData() 
+        {
+            // Dummy return //
+            return Task.FromResult(false);
+        }
     }
 }

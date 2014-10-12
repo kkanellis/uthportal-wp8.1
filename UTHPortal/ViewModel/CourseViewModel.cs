@@ -76,12 +76,12 @@ namespace UTHPortal.ViewModel
                     });
                 }
                 else {
-                    ValidateDisplayData();
+                    await ValidateDisplayData();
                 }
             }
         }
 
-        protected override async void ValidateDisplayData()
+        protected override async Task ValidateDisplayData()
         {
             bool AutoRefresh = (bool)_storageService.GetSettingsEntry("AutoRefresh");
 

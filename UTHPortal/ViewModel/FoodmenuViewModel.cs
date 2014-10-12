@@ -73,12 +73,12 @@ namespace UTHPortal.ViewModel
                     RefreshCommand.Execute(null);
                 }
                 else {
-                    ValidateDisplayData();
+                    await ValidateDisplayData();
                 }
             }
         }
 
-        protected override async void ValidateDisplayData()
+        protected override async Task ValidateDisplayData()
         {
             if (!RefreshedSuccessfull) {
                 /* Get AutoRefresh settings entry */
