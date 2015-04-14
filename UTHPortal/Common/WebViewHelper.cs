@@ -30,8 +30,7 @@ namespace UTHPortal.Common
             if (browser == null)
                 return;
 
-            var html = e.NewValue.ToString();
-
+            string html = e.NewValue.ToString();
             browser.NavigateToString(html);
         }
     }
