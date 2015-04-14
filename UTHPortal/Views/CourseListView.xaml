@@ -71,7 +71,7 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="#FFA20025">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>

@@ -39,7 +39,7 @@
 
     <Pivot Title="UTHPortal"
            ItemsSource="{Binding Data.Days}"
-           SelectedIndex="{Binding PivotSelectedIndex}"
+           SelectedIndex="{Binding PivotSelectedIndex}" BorderBrush="Black" Background="#FFA20025"
            >
         <Pivot.HeaderTemplate>
             <DataTemplate>
@@ -153,32 +153,32 @@
                     
                     <!-- Borders -->
                     <Border Grid.Row="1"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                     <Border Grid.Row="1"
                             Grid.Column="2"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                     
                     <Border Grid.Column="1"
                             Grid.Row="0"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                     <Border Grid.Column="1"
                             Grid.Row="1"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                     <Border Grid.Column="1"
                             Grid.Row="2"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                     <Border Grid.Column="1"
                             Grid.Row="3"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                     <Border Grid.Column="1"
                             Grid.Row="4"
-                            BorderBrush="{ThemeResource PhoneAccentBrush}"
+                            BorderBrush="#FFFFFF"
                             BorderThickness="1" />
                              
                 </Grid>

@@ -174,6 +174,7 @@
     <Content Include="Assets\appbar.newspaper.png" />
     <Content Include="Assets\appbar.social.uservoice.png" />
     <Content Include="Assets\appbar.weather.sun.png" />
+    <Content Include="Assets\kentavros.jpg" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\mainimage_blur.png" />
     <Content Include="Assets\opensource_white.png" />

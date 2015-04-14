@@ -22,7 +22,7 @@
     </Interactivity:Interaction.Behaviors>
     -->
     
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="Black">
 
         <Grid.ChildrenTransitions>
             <TransitionCollection>

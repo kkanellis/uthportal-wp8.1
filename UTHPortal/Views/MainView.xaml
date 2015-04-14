@@ -11,7 +11,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="UTHPortal.MainView"
     mc:Ignorable="d"
-    DataContext="{Binding Main, Source={StaticResource Locator}}" Background="Black"
+    DataContext="{Binding Main, Source={StaticResource Locator}}"
     >
 
     <Interactivity:Interaction.Behaviors>
@@ -25,7 +25,7 @@
         <DataTemplate x:Key="Standard200x180TileItemTemplate">
             <Grid Margin="0,0,9.5,9.5"
                   Visibility="{Binding IsImplemented, Converter={StaticResource BooleanToVisibility}}"
-                  Background="{ThemeResource PhoneAccentBrush}"
+                  Background="#FFA20025"
                   >
                 <Image Source="{Binding ImageSource}"
                        Stretch="None"
@@ -53,7 +53,7 @@
     
     <!-- Bottom AppBar -->
     <Page.BottomAppBar>
-        <CommandBar IsSticky="True" Background="{ThemeResource PhoneAccentBrush}">
+        <CommandBar IsSticky="True" Background="#FFA20025">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Label="Ρυθμίσεις"
                               IsCompact="False"
@@ -73,7 +73,7 @@
         <Image Source="/Assets/panepistimio_thessalias.jpg"
                Stretch="UniformToFill"></Image>
         -->
-        <Hub Header="UTHPortal" Background="Black">
+        <Hub Header="UTHPortal" Foreground="#FFA20025" RenderTransformOrigin="0.5,0.5" Background="White">
             <!--
             <Hub.Background>
                 <ImageBrush ImageSource="/Assets/panorama.jpg" />

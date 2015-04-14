@@ -6,6 +6,7 @@
              xmlns:common="using:UTHPortal.Common"
              xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
              xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+             RequestedTheme="Dark"
              >
   <Application.Resources>
       <vm:ViewModelLocator x:Key="Locator"  />

@@ -18,6 +18,7 @@
     <Page.Resources>
         <conv:DateConverter x:Key="DateConverter"/>
         <conv:ListCountToVisibilityConverter x:Key="ListCountConverter" />
+        <Color x:Key="AppBackgroundBrush">#FFA20025</Color>
     </Page.Resources>
     
     <Interactivity:Interaction.Behaviors>
@@ -37,6 +38,9 @@
     </Page.BottomAppBar>
 
 	<Grid x:Name="LayoutRoot">
+		<Grid.Background>
+			<SolidColorBrush Color="{StaticResource AppBackgroundBrush}"/>
+		</Grid.Background>
 
 		<Grid.ChildrenTransitions>
 			<TransitionCollection>
@@ -51,8 +55,8 @@
 
 		<!-- Title Panel -->
 		<StackPanel Grid.Row="0" Margin="19,0,0,0">
-			<TextBlock Text="UTHPortal" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-			<TextBlock Text="{Binding Data.Title}" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+			<TextBlock Text="UTHPortal" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0" Foreground="White"/>
+			<TextBlock Text="{Binding Data.Title}" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" Foreground="White"/>
 		</StackPanel>
         
         <!--  RSS Viewer -->
