@@ -11,8 +11,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="UTHPortal.MainView"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Main, Source={StaticResource Locator}}"
+    DataContext="{Binding Main, Source={StaticResource Locator}}" Background="Black"
     >
 
     <Interactivity:Interaction.Behaviors>
@@ -54,7 +53,7 @@
     
     <!-- Bottom AppBar -->
     <Page.BottomAppBar>
-        <CommandBar IsSticky="True">
+        <CommandBar IsSticky="True" Background="{ThemeResource PhoneAccentBrush}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Label="Ρυθμίσεις"
                               IsCompact="False"
@@ -74,10 +73,12 @@
         <Image Source="/Assets/panepistimio_thessalias.jpg"
                Stretch="UniformToFill"></Image>
         -->
-        <Hub Header="UTHPortal">
+        <Hub Header="UTHPortal" Background="Black">
+            <!--
             <Hub.Background>
                 <ImageBrush ImageSource="/Assets/panorama.jpg" />
             </Hub.Background>
+            -->
             <HubSection Header="ΠΑΝΕΠΙΣΤΗΜΙΟ">
                 <DataTemplate>
                     <GridView ItemsSource="{Binding UniversityButtonList}"
