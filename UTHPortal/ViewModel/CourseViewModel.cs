@@ -32,7 +32,7 @@ namespace UTHPortal.ViewModel
             {
                 Data = new CourseModel();
                 Data.Code = "ce213";
-                Data.Info = new CourseInfoModel() { Link = "http://inf.uth.gr/cat=5&id=233", Name = "Αριθμητική Ανάλυση" };
+                Data.Info = new CourseInfoModel() { LinkSite = "http://inf.uth.gr/cat=5&id=233", Name = "Αριθμητική Ανάλυση" };
                 Data.Announcements = new CourseAnnounceModel();
                 Data.Announcements.Eclass = new List<CourseAnnounce>();
                 Data.Announcements.Site = new List<CourseAnnounce>();

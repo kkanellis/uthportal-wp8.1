@@ -36,7 +36,7 @@ namespace UTHPortal.ViewModel
                     CourseModelChecked course = new CourseModelChecked();
                     course.Info = new CourseInfoModel();
                     course.Info.Name = "Προγραμματισμός Ι";
-                    course.Info.Link = "http://inf-server.inf.uth.gr/courses/CE120";
+                    course.Info.LinkSite = "http://inf-server.inf.uth.gr/courses/CE120";
                     course.IsChecked = (i % 2 == 0) ? true : false;
 
                     Courses.Add(course);

@@ -20,11 +20,17 @@ namespace UTHPortal.Models
         [JsonProperty("eclass")]
         public IList<CourseAnnounce> Eclass { get; set; }
 
+        [JsonProperty("first_updated")]
+        public DateTime FirstUpdated { get; set; }
+
         [JsonProperty("last_updated")]
         public DateTime LastUpdated { get; set; }
 
-        [JsonProperty("link")]
-        public string Link { get; set; }        
+        [JsonProperty("link_site")]
+        public string LinkSite { get; set; }
+
+        [JsonProperty("link_eclass")]
+        public string LinkEclass { get; set; }
     }
 
     public class CourseAnnounce : Announce

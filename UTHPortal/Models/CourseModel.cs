@@ -35,7 +35,19 @@ namespace UTHPortal.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("link")]
-        public string Link { get; set; }
+        [JsonProperty("code_site")]
+        public string CodeSite { get; set; }
+
+        [JsonProperty("code_eclass")]
+        public string CodeEclass { get; set; }
+
+        [JsonProperty("link_site")]
+        public string LinkSite { get; set; }
+
+        [JsonProperty("link_eclass")]
+        public string LinkEclass { get; set; }
+
+        [JsonProperty("semester")]
+        public Int32 Semester { get; set; }
     }
 }

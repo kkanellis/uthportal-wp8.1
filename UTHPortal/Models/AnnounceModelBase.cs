@@ -23,6 +23,9 @@ namespace UTHPortal.Models
         [JsonProperty("title")]
         public String Title { get; set; }
 
+        [JsonProperty("first_updated")]
+        public DateTime FirstUpdated { get; set; }
+
         [JsonProperty("last_updated")]
         public DateTime LastUpdated { get; set; }
 
