@@ -1,29 +1,19 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Threading;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UTHPortal.Common;
+using GalaSoft.MvvmLight.Command;
 using UTHPortal.Models;
 using UTHPortal.Views;
-using Windows.UI.ViewManagement;
 
 namespace UTHPortal.ViewModel
 {
     public class CourseListViewModel : UpdatableViewModel<CourseAllModel>
     {
-        private IEnumerable<CourseModel> _selectedCourses;
         public IEnumerable<CourseModel> SelectedCourses
         {
             get { return _selectedCourses; }
             set { Set(() => SelectedCourses, ref _selectedCourses, value); }
         }
+        private IEnumerable<CourseModel> _selectedCourses;
 
         public CourseListViewModel()
         {

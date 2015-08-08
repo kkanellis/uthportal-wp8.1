@@ -10,22 +10,15 @@ namespace UTHPortal.ViewModel
 {
     public class FoodmenuViewModel : UpdatableViewModel<FoodmenuModel>
     {
-        /*private string testJosn = @"{ ""date"": ""2014-05-12T00:00:00Z"", ""menu"":[ 
-{ ""date"": ""2014-05-12T00:00:00Z"", ""lunch"":{ ""main"":"" 1. ΜΠΑΚΑΛΙΑΡΟΣ 2. ΚΑΛΑΜΑΡΑΚΙΑ ΠΑΤΑΤΕΣ ΦΟΥΡΝΟΥ ΡΙΖΖΟΤΟ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ "" }, ""dinner"":{ ""main"":"" 1. ΚΟΤΟΠΟΥΛΟ ΚΑΤΣΑΡΟΛΑΣ 2. ΟΜΕΛΕΤΑ 1. ΜΑΝΕΣΤΡΑ 2. ΜΑΚ. ΚΟΦΤΟ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ ΦΕΤΑ "" }, ""name"":""Monday"" },
-{ ""date"": ""2014-05-13T00:00:00Z"", ""lunch"":{ ""main"":"" 1. ΚΟΛΟΚΥΘΑΚΙΑ ΓΕΜΙΣΤΑ 2.ΜΑΚΑΡΟΝΙΑ ΜΕ ΚΙΜΑ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ ΚΕΦ/ΡΙ "" }, ""dinner"":{ ""main"":"" 1. ΑΡΑΚΑΣ 2. ΜΠΡΙΑΜ "", ""desert"":"" ΦΡΟΥΤΑ Η ΓΛΥΚΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ ΦΕΤΑ "" }, ""name"":""Tuesday"" },
-{ ""date"": ""2014-05-14T00:00:00Z"", ""lunch"":{ ""main"":"" 1.ΦΑΣΟΛΑΔΑ 2. ΦΑΚΕΣ "", ""desert"":"" ΦΡΟΥΤΑ Η ΓΛΥΚΑ "", ""salad"":"" ΤΑΡΑΜΑΣ - ΕΛΙΕΣ ΠΙΚΛΕΣ – ΦΕΤΑ "" }, ""dinner"":{ ""main"":"" 1. ΚΟΤΟΠΟΥΛΟ ΛΕΜΟΝΑΤΟ 2. ΜΠΟΥΚΙΕΣ ΚΟΤ/ΛΟΥ ΠΑΝΕ ΠΕΝΝΕΣ ΧΥΛΟΠΙΤΕΣ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ "" }, ""name"":""Wednesday"" },
-{ ""date"": ""2014-05-15T00:00:00Z"", ""lunch"":{ ""main"":"" 1.ΜΟΣΧΑΡΙ ΓΙΟΥΒΕΤΣΙ 2.ΧΟΙΡΙΝΟ ΨΗΤΟ ΚΡΙΘΑΡΑΚΙ ΜΑΚ. ΚΟΦΤΟ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ ΦΕΤΑ "" }, ""dinner"":{ ""main"":"" 1.ΨΑΡΙ ΦΙΛΕΤΟ ΦΟΥΡΝΟΥ 2. ΣΟΥΠΙΕΣ ΚΡΑΣΑΤΕΣ ΠΑΤΑΤΕΣ ΡΥΖΙ ΜΕ ΛΑΧΑΝΙΚΑ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ "" }, ""name"":""Thursday"" },
-{ ""date"": ""2014-05-16T00:00:00Z"", ""lunch"":{ ""main"":"" ΣΟΥΤΖΟΥΚΑΚΙΑ ΣΜΥΡΝΑΙΙΚΑ ΜΟΥΣΑΚΑΣ ΠΟΥΡΕΣ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ "" }, ""dinner"":{ ""main"":"" ΦΑΣΟΛΙΑ ΓΙΓΑΝΤΕΣ ΡΕΒΥΘΙΑ "", ""desert"":"" ΦΡΟΥΤΑ Ή ΓΛΥΚΑ "", ""salad"":"" ΤΑΡΑΜΑΣ – ΕΛΙΕΣ ΠΙΚΛΕΣ - ΦΕΤΑ "" }, ""name"":""Friday"" },
-{ ""date"": ""2014-05-17T00:00:00Z"", ""lunch"":{ ""main"":"" 1.ΜΠΟΥΤΙ ΚΟΤ/ΛΟ ΨΗΤΟ 2. ΣΝΙΤΣΕΛ ΚΟΤ/ΛΟ ΜΑΚ. ΚΟΦΤΟ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ ΦΕΤΑ "" }, ""dinner"":{ ""main"":"" ΧΟΙΡΙΝΗ ΣΠΑΛΑ ΚΑΤΣΑΡΟΛΑΣ ΧΟΙΡΙΝΟ ΛΕΜΟΝΑΤΟ ΠΕΝΝΕΣ ΚΡΙΘΑΡΑΚΙ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ "" }, ""name"":""Saturday"" },
-{ ""date"": ""2014-05-18T00:00:00Z"", ""lunch"":{ ""main"":"" 1.ΜΠΡΙΖΟΛΑ ΧΟΙΡΙΝΗ 2.ΜΟΣΧΑΡΙ. ΚΟΚΚΙΝΙΣΤΟ ΡΙΖΟΤΟ "", ""desert"":"" ΦΡΟΥΤΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ "" }, ""dinner"":{ ""main"":"" 1. ΜΕΛΙΤΖΑΝΕΣ ΓΙΑΧΝΙ 2. ΣΠΑΝΑΚΟΡΥΖΟ "", ""desert"":"" ΦΡΟΥΤΑ Η ΓΛΥΚΑ "", ""salad"":"" ΣΑΛΑΤΑ ΕΠΟΧΗΣ ΦΕΤΑ "" }, ""name"":""Sunday"" } ],
-   ""last_updated"": ""2014-05-14T23:31:19.298Z"" }";*/
-
-        private int _pivotSelectedIndex;
-        public int PivotSelectedIndex
+        /// <summary>
+        /// Int representing the selected day fot pivot control.
+        /// </summary>
+        public int SelectedDay
         {
-            get { return _pivotSelectedIndex; }
-            set { Set(() => PivotSelectedIndex, ref _pivotSelectedIndex, value); }
+            get { return _selectedDay; }
+            set { Set(() => SelectedDay, ref _selectedDay, value); }
         }
+        private int _selectedDay;
 
         public FoodmenuViewModel()
         {
@@ -56,10 +49,6 @@ namespace UTHPortal.ViewModel
 
                 Data.Days = tmpDays;
             }
-            /*else {
-                Data = (FoodmenuModel)_dataService.ParseJson(testJosn, typeof(FoodmenuModel));
-                ValidateDisplayData();
-            }*/
         }
 
         protected override async void ExecutePageLoaded()
@@ -80,38 +69,31 @@ namespace UTHPortal.ViewModel
 
         protected override async Task ValidateDisplayData()
         {
-            if (!RemoteDataAvailable) {
-                /* Get AutoRefresh settings entry */
-                bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
+            bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
+            bool LocalDataValid = LocalDataAvailable && !IsOldMenuSaved();
 
+            if (!RemoteDataAvailable && !LocalDataValid) {
                 if (!LocalDataAvailable || IsOldMenuSaved()) {
                     await viewService.ShowMessageDialog(
                         "Δεν έχει ανακοινωθεί ακόμα το μενού της λέσχης.",
-                        "Μενού λέσχης");
+                        "Μενού λέσχης"
+                    );
 
                     if (AutoRefresh) {
                         navigationService.GoBack();
                     }
                 }
-                else {
-                    /* Foodmenu is shown */
-                    DayOfWeek today = DateTime.Now.DayOfWeek;
-
-                    /* Sunday = 0, so we must convert to Monday = 0 */
-                    PivotSelectedIndex = ((int)today + 6) % 7;
-                }
             }
-            else {
-                /* Foodmenu is shown */
+            else if (RemoteDataAvailable || (!RemoteDataAvailable && LocalDataValid)) {
                 DayOfWeek today = DateTime.Now.DayOfWeek;
 
-                /* Sunday = 0, so we must convert to Monday = 0 */
-                PivotSelectedIndex = ((int)today + 6) % 7;
-            }
+                // Sunday = 0, so we must convert to Monday = 0
+                SelectedDay = ((int)today + 6) % 7;
+            } 
         }
 
         private bool IsOldMenuSaved() {
-            /* Find last monday dateTime */
+            // Find last monday dateTime
             DateTime LastMonday = DateTime.Now.Subtract(TimeSpan.FromDays(((int)(DateTime.Now.DayOfWeek + 6) % 7)));
 
             if (LocalDataAvailable && LastMonday.Date != Data.Days[0].Date.Date) {

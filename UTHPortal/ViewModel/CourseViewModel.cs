@@ -1,19 +1,9 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Threading;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Threading;
 using UTHPortal.Common;
 using UTHPortal.Models;
-using Windows.UI.ViewManagement;
-using Windows.UI.Popups;
-using System.Collections.ObjectModel;
 
 namespace UTHPortal.ViewModel
 {
@@ -59,16 +49,16 @@ namespace UTHPortal.ViewModel
                 RemoteDataAvailable = false;
                 LocalDataAvailable = false;
 
-                /* Create the selected course url */
+                // Create the selected course url
                 Url = String.Format(
                     RestAPI.InfDeptCourse,
-                    (string)navigationService.GetAndRemoveState(this.GetType()));
+                    (string)navigationService.GetAndRemoveState(this.GetType())
+                );
 
-
-                /* Check if we have a saved view for the current course */
+                // Check if we have a saved view for the current course
                 await GetSavedView();
 
-                /* Perform the refresh */
+                // Perform the refresh
                 bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
                 if (AutoRefresh) {
                     await DispatcherHelper.RunAsync(() => {
@@ -86,11 +76,12 @@ namespace UTHPortal.ViewModel
             bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
 
             if (!RemoteDataAvailable && !LocalDataAvailable) {
-                /* At this point I have to data to display */
+                // At this point I have no data to display
 
                 await viewService.ShowMessageDialog(
-                        "Δεν υπάρχουν αποθηκευμένα δεδομένα για το συγκεκριμένο μάθημα",
-                        "Πρόβλημα!");
+                    "Δεν υπάρχουν αποθηκευμένα δεδομένα για το συγκεκριμένο μάθημα",
+                    "Πρόβλημα!"
+                );
 
                 /* Means we already tried to update */
                 if (AutoRefresh) {
@@ -110,7 +101,8 @@ namespace UTHPortal.ViewModel
                     Data.Announcements.Eclass.Count == 0) {
                     await viewService.ShowMessageDialog(
                         "Δεν υπάρχουν διαθέσιμες ανακοινώσεις αυτή την στιγμή",
-                        Data.Info.Name);
+                        Data.Info.Name
+                    );
 
                     navigationService.GoBack();
                 }

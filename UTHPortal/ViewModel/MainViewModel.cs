@@ -28,10 +28,10 @@ namespace UTHPortal.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
-        private IStorageService _storageService;
-        private IViewService _viewService;
-        private IDataService _dataService;
+        private INavigationService navigationService;
+        private IStorageService storageService;
+        private IViewService viewService;
+        private IDataService dataService;
 
         private ObservableCollection<TileModel> _universityButtonList;
         public ObservableCollection<TileModel> UniversityButtonList
@@ -118,23 +118,13 @@ namespace UTHPortal.ViewModel
 
             if (!IsInDesignMode)
             {
-                _navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
-                _storageService = SimpleIoc.Default.GetInstance<IStorageService>();
-                _viewService = SimpleIoc.Default.GetInstance<IViewService>();
-                _dataService = SimpleIoc.Default.GetInstance<IDataService>();
+                navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
+                storageService = SimpleIoc.Default.GetInstance<IStorageService>();
+                viewService = SimpleIoc.Default.GetInstance<IViewService>();
+                dataService = SimpleIoc.Default.GetInstance<IDataService>();
             }  
-
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
         }
 
-        private RelayCommand _pageLoaded;
         public RelayCommand PageLoaded
         {
             get
@@ -143,26 +133,27 @@ namespace UTHPortal.ViewModel
                     ?? (_pageLoaded = new RelayCommand(
                         async () => 
                         {
-                            bool firstLaunched = (bool)_storageService.GetSettingsEntry("FirstLaunched");
+                            bool firstLaunched = (bool)storageService.GetSettingsEntry("FirstLaunched");
                             if (firstLaunched == false) {
-                                await _viewService.ShowMessageDialog(
+                                await viewService.ShowMessageDialog(
                                     "Η εφαρμόγή θα χρειαστεί πρόσβαση στο Internet, λόγω της πρώτης εκτέλεσης. \n\nΠαρακαλούμε βεβαιωθείτε πως υπάρχει ενεργή σύνδεση.", "Καλωσήρθατε!");
                                 
                                 // Try to get all courses //
-                                if (await _dataService.RefreshAndSave(RestAPI.InfDeptCourses, typeof(CourseAllModel)) == null) {
-                                    await _viewService.ShowMessageDialog(
+                                if (await dataService.RefreshAndSave(RestAPI.InfDeptCourses, typeof(CourseAllModel)) == null) {
+                                    await viewService.ShowMessageDialog(
                                         "Δυστυχώς δεν ήταν δυνατή η επικοινωνία με τον server.\n\nΣυνδεθείτε στο Internet και προσπαθήστε αργότερα.", "Πρόβλημα σύνδεσης");
                                     App.Current.Exit();
                                 }
                                 else {
-                                    _storageService.SaveSettingsEntry("FirstLaunched", true);
-                                    await _viewService.ShowMessageDialog("Επιτυχής σύνδεση με server! Παρακαλούμε επιλέξτε τις ρυθμίσεις που θέλετε.\n\nΠεριμένουμε τις προτάσεις σας!\n-- Developer team", "Καλώσήρθατε!");
-                                    _navigationService.NavigateTo(typeof(AppSettingsView));
+                                    storageService.SaveSettingsEntry("FirstLaunched", true);
+                                    await viewService.ShowMessageDialog("Επιτυχής σύνδεση με server! Παρακαλούμε επιλέξτε τις ρυθμίσεις που θέλετε.\n\nΠεριμένουμε τις προτάσεις σας!\n-- Developer team", "Καλώσήρθατε!");
+                                    navigationService.NavigateTo(typeof(AppSettingsView));
                                 }
                             }
                         }));
             }
         }
+        private RelayCommand _pageLoaded;
 
 
 
@@ -175,7 +166,7 @@ namespace UTHPortal.ViewModel
                     ?? (_universityAnnounceClick = new RelayCommand<string>(
                         url =>
                         {
-                            _navigationService.NavigateTo(
+                            navigationService.NavigateTo(
                                 typeof(AnnounceListView),
                                 typeof(AnnounceListViewModel),
                                 url);
@@ -192,7 +183,7 @@ namespace UTHPortal.ViewModel
                     ?? (_courseListClick = new RelayCommand<string>(
                         url =>
                         {
-                            _navigationService.NavigateTo(
+                            navigationService.NavigateTo(
                                 typeof(CourseListView),
                                 typeof(CourseListViewModel),
                                 url);
@@ -230,7 +221,7 @@ namespace UTHPortal.ViewModel
                     ?? (_showSettings = new RelayCommand(
                         () =>
                         {
-                            _navigationService.NavigateTo(
+                            navigationService.NavigateTo(
                                 typeof(AppSettingsView)
                             );
                         }));
@@ -250,7 +241,7 @@ namespace UTHPortal.ViewModel
                     ?? (_showAboutViewCommand = new RelayCommand(
                                           () =>
                                           {
-                                              _navigationService.NavigateTo(typeof(AboutView));
+                                              navigationService.NavigateTo(typeof(AboutView));
                                           }));
             }
         }
@@ -267,7 +258,7 @@ namespace UTHPortal.ViewModel
                 return _showFoodmenu
                     ?? (_showFoodmenu = new RelayCommand<string>(
                                            url => {
-                                              _navigationService.NavigateTo(
+                                              navigationService.NavigateTo(
                                                   typeof(FoodmenuView),
                                                   typeof(FoodmenuViewModel),
                                                   url);

@@ -162,7 +162,7 @@ namespace UTHPortal.ViewModel
 
         protected virtual Task ValidateDisplayData()
         {
-            // Dummy return //
+            // Dummy return
             return Task.FromResult(false);
         }
     }

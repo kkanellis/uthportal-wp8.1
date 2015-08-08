@@ -45,7 +45,7 @@
 								       Text="{Binding Code}"
                                        TextAlignment="Center"
                                        Margin="0,7.5,5,0"
-                                       Style="{ThemeResource  ComboBoxPlaceholderTextBlockStyle}"
+                                       Style="{ThemeResource ComboBoxPlaceholderTextBlockStyle}"
                                     />
             </Grid>
         </DataTemplate>

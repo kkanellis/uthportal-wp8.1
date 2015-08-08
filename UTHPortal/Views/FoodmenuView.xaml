@@ -39,7 +39,7 @@
 
     <Pivot Title="UTHPortal"
            ItemsSource="{Binding Data.Days}"
-           SelectedIndex="{Binding PivotSelectedIndex}" BorderBrush="Black" Background="#FFA20025"
+           SelectedIndex="{Binding SelectedDay}" BorderBrush="Black" Background="#FFA20025"
            >
         <Pivot.HeaderTemplate>
             <DataTemplate>

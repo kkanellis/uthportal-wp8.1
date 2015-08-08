@@ -12,15 +12,9 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
-using UTHPortal.Models;
+using GalaSoft.MvvmLight.Ioc;
 using UTHPortal.Common;
-using Windows.Phone.UI.Input;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
-using GalaSoft.MvvmLight.Threading;
 
 namespace UTHPortal.ViewModel
 {
