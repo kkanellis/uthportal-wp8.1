@@ -56,21 +56,21 @@ namespace UTHPortal.ViewModel
 
             UniversityButtonList.Add(new TileModel(){
                 Label = "Ανακοινώσεις",
-                Url = RestAPI.UniversityRssAnnouncements,
+                Url = RestAPI.UniversityNews,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel() {
                 Label = "Ειδήσεις",
-                Url = RestAPI.UniversityRssNews,
+                Url = RestAPI.UniversityNews,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.newspaper.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel() {
                 Label = "Εκδηλώσεις",
-                Url = RestAPI.UniversityRssEvents,
+                Url = RestAPI.UniversityEvents,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.calendar.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
@@ -91,7 +91,7 @@ namespace UTHPortal.ViewModel
             DeptButtonList = new ObservableCollection<TileModel>();
             DeptButtonList.Add(new TileModel(){
                 Label = "Ανακοινώσεις",
-                Url = RestAPI.InfDeptGenAnnouncements,
+                Url = RestAPI.InfDeptAnnouncementsGeneral,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true

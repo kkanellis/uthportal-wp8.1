@@ -8,19 +8,22 @@ namespace UTHPortal.Common
 {
     public class RestAPI
     {
-        public static string baseUrl = "http://sfi.ddns.net/uthportal/";
+        public static string baseUrl = "http://sfi.ddns.net/test/uthportal/api/v1/info/";
 
-        public static string UniversityFoodmenu = baseUrl + "uth/foodmenu";
-        public static string UniversityRss = baseUrl + "uth/rss";
-        public static string InfDeptAnnounce = baseUrl + "inf/announce";
-        public static string InfDeptCourses = baseUrl + "inf/courses";
-        public static string InfDeptCourse = InfDeptCourses + "/{0}";
+        private static string InfDept = baseUrl + "inf/";
+        public static string InfDeptAnnounce = InfDept + "announce/";
+        public static string InfDeptCourses = InfDept + "courses/";
+        public static string InfDeptCourse = InfDeptCourses + "{0}";
+        public static string InfDeptAnnouncementsGeneral = InfDeptAnnounce + "general";
+        public static string InfDeptAnnouncementsUndergraduates = InfDeptAnnounce + "undergraduates";
+        public static string InfDeptAnnouncementsAcademic = InfDeptAnnounce + "academic";
+        public static string InfDeptAnnouncementsScholarships = InfDeptAnnounce + "scholarships";
 
-        public static string UniversityRssNews = UniversityRss + "/news";
-        public static string UniversityRssEvents = UniversityRss + "/events";
-        public static string UniversityRssAnnouncements = UniversityRss + "/genannounce";
-
-        public static string InfDeptGenAnnouncements = InfDeptAnnounce + "/genannounce";
+        private static string Uth = baseUrl + "uth/";
+        public static string UthAnnouncements = Uth + "announce/";
+        public static string UniversityNews = UthAnnouncements + "news";
+        public static string UniversityEvents = UthAnnouncements + "events";
+        public static string UniversityFoodmenu = Uth + "foodmenu";
 
         public static string Feedback = baseUrl + "/feedback";
 
