@@ -56,7 +56,7 @@ namespace UTHPortal.ViewModel
                     ?? (_showDetails = new RelayCommand<CourseModel>(
                                           course =>
                                           {
-                                              _navigationService.NavigateTo(
+                                              navigationService.NavigateTo(
                                                   typeof(CourseView),
                                                   typeof(CourseViewModel),
                                                   course.Code);
@@ -66,16 +66,16 @@ namespace UTHPortal.ViewModel
 
         protected override async void ExecutePageLoaded()
         {
-            if (_navigationService.StateExists(this.GetType()))
+            if (navigationService.StateExists(this.GetType()))
             {
-                Url = (string)_navigationService.GetAndRemoveState(this.GetType());
+                Url = (string)navigationService.GetAndRemoveState(this.GetType());
 
                 await GetSavedView();
 
                 /* Get the selected courses */
-                SelectedCourses = (List<CourseModel>)_storageService.GetSettingsEntry("SelectedCourses");
+                SelectedCourses = (List<CourseModel>)storageService.GetSettingsEntry("SelectedCourses");
 
-                if ((bool)_storageService.GetSettingsEntry("AutoRefresh"))
+                if ((bool)storageService.GetSettingsEntry("AutoRefresh"))
                 {
                     RefreshCommand.Execute(null);
                 }

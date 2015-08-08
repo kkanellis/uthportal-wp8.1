@@ -1,17 +1,11 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UTHPortal.Models;
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace UTHPortal.Common
 {
@@ -24,7 +18,7 @@ namespace UTHPortal.Common
         private Windows.Storage.Streams.Buffer buffer;
 
         private char[] folderSeparators = { '/' };
-        private Object _lock;
+        private object _lock;
 
         public StorageService()
         {
@@ -33,6 +27,7 @@ namespace UTHPortal.Common
             settingsContainer = ApplicationData.Current.LocalSettings;
 
             loggerService = SimpleIoc.Default.GetInstance<ILoggerService>();
+
             /* Uncomment to clear the settings */
             /*foreach (string key in settingsContainer.Values.Keys)
             {
@@ -180,7 +175,6 @@ namespace UTHPortal.Common
             {
                 value = (string)SerializeToString(value);
 
-                
                 if (settingsContainer.Values.ContainsKey(key))
                 {
                     if (settingsContainer.Values[key] != value)

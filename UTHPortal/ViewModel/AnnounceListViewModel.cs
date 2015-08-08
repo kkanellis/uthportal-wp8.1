@@ -1,17 +1,8 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Threading;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UTHPortal.Common;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using UTHPortal.Models;
-using Windows.UI.ViewManagement;
 
 namespace UTHPortal.ViewModel
 {
@@ -36,10 +27,9 @@ namespace UTHPortal.ViewModel
             }
         }
 
-        private RelayCommand<Announce> _showDetails;
 
         /// <summary>
-        /// Show the UniversityRssDetailsView based on what item was tapped
+        /// Navigates to another view in order to see the specific announcement
         /// </summary>
         public RelayCommand<Announce> ShowDetails
         {
@@ -47,25 +37,28 @@ namespace UTHPortal.ViewModel
             {
                 return _showDetails
                     ?? (_showDetails = new RelayCommand<Announce>(
-                                          entry =>
-                                          {
-                                              _navigationService.NavigateTo(
-                                                  typeof(AnnounceListDetailsView),
-                                                  typeof(AnnounceListDetailsViewModel),
-                                                  entry);
-                                          }));
+                      entry =>
+                      {
+                          navigationService.NavigateTo(
+                              typeof(AnnounceListDetailsView),
+                              typeof(AnnounceListDetailsViewModel),
+                              entry
+                          );
+                      }));
             }
         }
+        private RelayCommand<Announce> _showDetails;
+
 
         protected override async void ExecutePageLoaded()
         {
-            if (_navigationService.StateExists(this.GetType()))
+            if (navigationService.StateExists(this.GetType()))
             {
-                Url = (string)_navigationService.GetAndRemoveState(this.GetType());
+                Url = (string)navigationService.GetAndRemoveState(this.GetType());
 
                 await GetSavedView();
 
-                if ((bool)_storageService.GetSettingsEntry("AutoRefresh")) {
+                if ((bool)storageService.GetSettingsEntry("AutoRefresh")) {
                     await DispatcherHelper.RunAsync(() => {
                         RefreshCommand.Execute(null);
                     });

@@ -12,10 +12,7 @@ namespace UTHPortal.Common
         Task<string> GetAPIData(string url);
         Task SaveAPIData(string url, string data);
 
-        //void SaveSettings(AppSettingsModel model);
-        //AppSettingsModel GetSettings();
-
-        Object GetSettingsEntry(string name);
+        object GetSettingsEntry(string name);
         bool SaveSettingsEntry(string name, object value);
     }
 }

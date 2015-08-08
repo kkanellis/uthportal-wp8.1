@@ -1,19 +1,15 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using UTHPortal.Common;
 using UTHPortal.Models;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace UTHPortal.ViewModel
 {
     public class AnnounceListDetailsViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
+        private INavigationService navigationService;
         private Announce _entry;
 
         /// <summary>
@@ -39,22 +35,23 @@ namespace UTHPortal.ViewModel
             }
             else
             {
-                _navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
+                navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
             }
         }
 
-        private RelayCommand _pageLoaded;
-
+         
         public RelayCommand PageLoaded
         {
             get {
                 return _pageLoaded ?? (_pageLoaded = new RelayCommand(() =>
                     {
-                        if( _navigationService.StateExists(this.GetType())) {
-                            entry = (Announce)_navigationService.GetAndRemoveState(this.GetType());
+                        if( navigationService.StateExists(this.GetType())) {
+                            entry = (Announce)navigationService.GetAndRemoveState(this.GetType());
                         }
                     }));
             }
         }
+        private RelayCommand _pageLoaded;
+
     }
 }

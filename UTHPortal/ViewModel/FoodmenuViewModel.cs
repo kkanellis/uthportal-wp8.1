@@ -64,12 +64,12 @@ namespace UTHPortal.ViewModel
 
         protected override async void ExecutePageLoaded()
         {
-            if (_navigationService.StateExists(this.GetType())) {
-                Url = (string)_navigationService.GetAndRemoveState(this.GetType());
+            if (navigationService.StateExists(this.GetType())) {
+                Url = (string)navigationService.GetAndRemoveState(this.GetType());
 
                 await GetSavedView();
 
-                if ((bool)_storageService.GetSettingsEntry("AutoRefresh")) {
+                if ((bool)storageService.GetSettingsEntry("AutoRefresh")) {
                     RefreshCommand.Execute(null);
                 }
                 else {
@@ -80,17 +80,17 @@ namespace UTHPortal.ViewModel
 
         protected override async Task ValidateDisplayData()
         {
-            if (!RefreshedSuccessfull) {
+            if (!RemoteDataAvailable) {
                 /* Get AutoRefresh settings entry */
-                bool AutoRefresh = (bool)_storageService.GetSettingsEntry("AutoRefresh");
+                bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
 
-                if (!SavedViewAvailable || IsOldMenuSaved()) {
-                    await _viewService.ShowMessageDialog(
+                if (!LocalDataAvailable || IsOldMenuSaved()) {
+                    await viewService.ShowMessageDialog(
                         "Δεν έχει ανακοινωθεί ακόμα το μενού της λέσχης.",
                         "Μενού λέσχης");
 
                     if (AutoRefresh) {
-                        _navigationService.GoBack();
+                        navigationService.GoBack();
                     }
                 }
                 else {
@@ -114,7 +114,7 @@ namespace UTHPortal.ViewModel
             /* Find last monday dateTime */
             DateTime LastMonday = DateTime.Now.Subtract(TimeSpan.FromDays(((int)(DateTime.Now.DayOfWeek + 6) % 7)));
 
-            if (SavedViewAvailable && LastMonday.Date != Data.Days[0].Date.Date) {
+            if (LocalDataAvailable && LastMonday.Date != Data.Days[0].Date.Date) {
                 return true;
             }
             return false;

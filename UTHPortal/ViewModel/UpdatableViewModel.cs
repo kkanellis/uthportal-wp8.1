@@ -1,85 +1,90 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UTHPortal.Common;
 
 namespace UTHPortal.ViewModel
 {
     public abstract class UpdatableViewModel<T> : ViewModelBase
     {
-        protected IDataService _dataService;
-        protected INavigationService _navigationService;
-        protected IStorageService _storageService;
-        protected IViewService _viewService;
+        protected IDataService dataService;
+        protected INavigationService navigationService;
+        protected IStorageService storageService;
+        protected IViewService viewService;
 
-        /* Binding properties */
-        protected T _data;
+
+        /// <summary>
+        /// Represents the data to be viewed.
+        /// </summary>
         public T Data
         {
             get { return _data; }
             set { Set(() => Data, ref _data, value); }
         }
+        protected T _data;
 
-        protected bool _isBusy;
-        public bool IsBusy
+        /// <summary>
+        /// True if the ViewModel is currently retrieving data from the web.
+        /// </summary>
+        public bool IsRefreshing
         {
-            get { return !_isBusy; }
-            set { Set(() => IsBusy, ref _isBusy, value); }
+            get { return !_isRefreshing; }
+            set { Set(() => IsRefreshing, ref _isRefreshing, value); }
         }
-        /* ****************** */
+        protected bool _isRefreshing;
 
-        /* Simple properties */
-        protected bool _refreshedSuccessfull;
-        public bool RefreshedSuccessfull
+        /// <summary>
+        /// True if remote data were downloaded, false otherwise.
+        /// </summary>
+        public bool RemoteDataAvailable
         {
-            get { return _refreshedSuccessfull; }
-            set { _refreshedSuccessfull = value; }
+            get { return _remoteDataAvailable; }
+            set { _remoteDataAvailable = value; }
         }
+        protected bool _remoteDataAvailable;
 
-        protected bool _savedViewAvailable;
-        public bool SavedViewAvailable
+        /// <summary>
+        /// True if local data are available (from a previous successfull fetching), false otherwise.
+        /// </summary>
+        public bool LocalDataAvailable
         {
-            get { return _savedViewAvailable; }
-            set { _savedViewAvailable = value; }
+            get { return _localDataAvailable; }
+            set { _localDataAvailable = value; }
         }
-        /* ****************** */
+        protected bool _localDataAvailable;
 
-        protected string _url;
+        /// <summary>
+        /// String representing the url used for fetching.
+        /// </summary>
         public string Url
         {
             get { return _url; }
             set
             {
                 _url = value;
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                {
+                DispatcherHelper.CheckBeginInvokeOnUI(() => {
                     Data = default(T);
                 });
             }
         }
+        protected string _url;
 
         /// <summary>
-        /// Initializes the viewmodel by retrieving all services needed
+        /// Initializes the viewmodel by locating all services needed
         /// </summary>
         public UpdatableViewModel()
         {
-            if (!IsInDesignMode)
-            {
-                _dataService = SimpleIoc.Default.GetInstance<IDataService>();
-                _navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
-                _storageService = SimpleIoc.Default.GetInstance<IStorageService>();
-                _viewService = SimpleIoc.Default.GetInstance<IViewService>();
+            if (!IsInDesignMode) {
+                dataService = SimpleIoc.Default.GetInstance<IDataService>();
+                navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
+                storageService = SimpleIoc.Default.GetInstance<IStorageService>();
+                viewService = SimpleIoc.Default.GetInstance<IViewService>();
             }
         }
 
-        private RelayCommand _refreshCommand;
         /// <summary>
         /// Gets the RefreshCommand.
         /// </summary>
@@ -91,34 +96,34 @@ namespace UTHPortal.ViewModel
                     ?? (_refreshCommand = new RelayCommand(ExecuteRefreshCommand));
             }
         }
+        private RelayCommand _refreshCommand;
+
         /// <summary>
         /// Does the neccessary actions for the refresh of the data
         /// </summary>
         protected virtual async void ExecuteRefreshCommand()
         {
-            IsBusy = true;
+            IsRefreshing = true;
 
-            await _viewService.ShowStatusBar("Ενημέρωση...", null);
+            await viewService.ShowStatusBar("Ενημέρωση...", null);
 
-            var newData = await _dataService.RefreshAndSave(
+            var newData = await dataService.RefreshAndSave(
                 Url,
-                typeof(T));
+                typeof(T)
+            );
 
-
-            if (newData != null)
-            {
+            if (newData != null) {
                 Data = (T)newData;
-                _viewService.ModifyStatusBar("Τελευταία Ενημέρωση: " + DateTime.Now.ToString("HH:mm"), 0.0);
+                viewService.ModifyStatusBar("Τελευταία Ενημέρωση: " + DateTime.Now.ToString("HH:mm"), 0.0);
 
-                RefreshedSuccessfull = true;
+                RemoteDataAvailable = true;
             }
-            else
-            {
-                _viewService.ModifyStatusBar("Αποτυχία ενημέρωσης!", 0.0);
-                RefreshedSuccessfull = false;
+            else {
+                viewService.ModifyStatusBar("Αποτυχία ενημέρωσης!", 0.0);
+                RemoteDataAvailable = false;
             }
 
-            IsBusy = false;
+            IsRefreshing = false;
 
             await ValidateDisplayData();
         }
@@ -138,24 +143,24 @@ namespace UTHPortal.ViewModel
         protected abstract void ExecutePageLoaded();
 
         /// <summary>
-        /// Retrieves the saved data of the view using the provided Storage service.
+        /// Retrieves the local data of this view using the provided storage service.
         /// </summary>
         protected async Task GetSavedView()
         {
-            string json = await _storageService.GetAPIData(Url);
-            
-            Data = (T)_dataService.ParseJson(json, typeof(T));
-            
+            string json = await storageService.GetAPIData(Url);
+
+            Data = (T)dataService.ParseJson(json, typeof(T));
+
             if (Data == null) {
                 Data = default(T);
-                SavedViewAvailable = false;
+                LocalDataAvailable = false;
             }
             else {
-                SavedViewAvailable = true;
+                LocalDataAvailable = true;
             }
         }
 
-        protected virtual Task ValidateDisplayData() 
+        protected virtual Task ValidateDisplayData()
         {
             // Dummy return //
             return Task.FromResult(false);

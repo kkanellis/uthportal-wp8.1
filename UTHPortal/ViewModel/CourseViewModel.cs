@@ -53,23 +53,23 @@ namespace UTHPortal.ViewModel
 
         protected override async void ExecutePageLoaded()
         {
-            if (_navigationService.StateExists(this.GetType()))
+            if (navigationService.StateExists(this.GetType()))
             {
                 /* TODO: Find a better place for those 2 */
-                RefreshedSuccessfull = false;
-                SavedViewAvailable = false;
+                RemoteDataAvailable = false;
+                LocalDataAvailable = false;
 
                 /* Create the selected course url */
                 Url = String.Format(
                     RestAPI.InfDeptCourse,
-                    (string)_navigationService.GetAndRemoveState(this.GetType()));
+                    (string)navigationService.GetAndRemoveState(this.GetType()));
 
 
                 /* Check if we have a saved view for the current course */
                 await GetSavedView();
 
                 /* Perform the refresh */
-                bool AutoRefresh = (bool)_storageService.GetSettingsEntry("AutoRefresh");
+                bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
                 if (AutoRefresh) {
                     await DispatcherHelper.RunAsync(() => {
                         RefreshCommand.Execute(null);
@@ -83,18 +83,18 @@ namespace UTHPortal.ViewModel
 
         protected override async Task ValidateDisplayData()
         {
-            bool AutoRefresh = (bool)_storageService.GetSettingsEntry("AutoRefresh");
+            bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
 
-            if (!RefreshedSuccessfull && !SavedViewAvailable) {
+            if (!RemoteDataAvailable && !LocalDataAvailable) {
                 /* At this point I have to data to display */
 
-                await _viewService.ShowMessageDialog(
+                await viewService.ShowMessageDialog(
                         "Δεν υπάρχουν αποθηκευμένα δεδομένα για το συγκεκριμένο μάθημα",
                         "Πρόβλημα!");
 
                 /* Means we already tried to update */
                 if (AutoRefresh) {
-                    _navigationService.GoBack();
+                    navigationService.GoBack();
                 }
             }
             else {
@@ -108,11 +108,11 @@ namespace UTHPortal.ViewModel
                 /* If no announcements are retrieved, then go back */
                 if (Data.Announcements.Site.Count == 0 &&
                     Data.Announcements.Eclass.Count == 0) {
-                    await _viewService.ShowMessageDialog(
+                    await viewService.ShowMessageDialog(
                         "Δεν υπάρχουν διαθέσιμες ανακοινώσεις αυτή την στιγμή",
                         Data.Info.Name);
 
-                    _navigationService.GoBack();
+                    navigationService.GoBack();
                 }
             }
         }
