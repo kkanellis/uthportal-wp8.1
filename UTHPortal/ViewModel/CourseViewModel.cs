@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Threading;
 using UTHPortal.Common;
@@ -9,42 +10,55 @@ namespace UTHPortal.ViewModel
 {
     public class CourseViewModel : UpdatableViewModel<CourseModel>
     {
-        private int _pivotSelectedIndex;
-        public int PivotSelectedIndex
+        /// <summary>
+        /// List that contains all announcements sorted by date.
+        /// </summary>
+        public IList<CourseAnnounceEx> AllAnnouncements
         {
-            get { return _pivotSelectedIndex; }
-            set { Set(() => PivotSelectedIndex, ref _pivotSelectedIndex, value);}
+            get { return _allAnnouncements; }
+            set { Set(() => AllAnnouncements, ref _allAnnouncements, value); }
         }
+        private IList<CourseAnnounceEx> _allAnnouncements;
 
         public CourseViewModel()
         {
-            if (IsInDesignMode)
-            {
+            if (IsInDesignMode) {
                 Data = new CourseModel();
                 Data.Code = "ce213";
-                Data.Info = new CourseInfoModel() { LinkSite = "http://inf.uth.gr/cat=5&id=233", Name = "Αριθμητική Ανάλυση" };
-                Data.Announcements = new CourseAnnounceModel();
-                Data.Announcements.Eclass = new List<CourseAnnounce>();
-                Data.Announcements.Site = new List<CourseAnnounce>();
-
-                for (int i = 0; i < 5; i++)
+                Data.Info = new CourseInfoModel()
                 {
-                    CourseAnnounce ca = new CourseAnnounce();
-                    ca.Date = DateTime.Now;
-                    ca.HasTime = false;
-                    ca.Plaintext = "Τα τμήματα εξέτασης του εργαστηριακού μέρους του μαθήματος βρίσκονται εδώ.\n   Κατά την εξέταση θα χρειαστείτε τη φοιτητική σας ταυτότητα.";
-                    ca.Title = "CE213";
+                    CodeSite = "ΗΥ213",
+                    CodeEclass = "MHX118",
+                    Semester = 4,
+                    LinkEclass = "http://eclass.uth.gr/eclass/courses/MHX118/",
+                    LinkSite = "http://inf.uth.gr/cat=5&id=233",
+                    Name = "Αριθμητική Ανάλυση"
+                };
 
-                    Data.Announcements.Eclass.Add(ca);
-                    Data.Announcements.Site.Add(ca);
+                AllAnnouncements = new List<CourseAnnounceEx>();
+                for (int i = 0; i < 4; i++) {
+                    var ca = new CourseAnnounceEx();
+                    var cb = new CourseAnnounceEx();
+
+                    ca.Date = new DateTime(2015, 8 - i, 9);
+                    cb.Date = new DateTime(2015, 7 - i, 13);
+                    ca.HasTime = cb.HasTime = false;
+                    ca.Title = cb.Title = "HY213";
+
+                    ca.Plaintext = "Aenean consectetur posuere arcu sodales viverra. Phasellus facilisis lacinia est, eget cursus magna tempus et. Nam non scelerisque mauris. Nulla facilisi. Praesent efficitur magna eget nisi varius, a bibendum turpis feugiat. . Aliquam feugiat orci a sem pharetra, vitae consectetur diam porta. Nullam pulvinar felis ac consectetur luctus. Integer eget iaculis ipsum, sit amet accumsan neque.";
+                    ca.Source = "ιστοσελίδα";
+                    AllAnnouncements.Add(ca);
+
+                    cb.Plaintext = "Fusce vitae tincidunt ante.Mauris at tortor lobortis, tincidunt arcu ac, consectetur neque.Etiam maximus, justo ut rutrum iaculis, nisi mauris tempor mi, sit amet aliquet orci magna id nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+                    cb.Source = "eclass";
+                    AllAnnouncements.Add(cb);
                 }
             }
         }
 
         protected override async void ExecutePageLoaded()
         {
-            if (navigationService.StateExists(this.GetType()))
-            {
+            if (navigationService.StateExists(this.GetType())) {
                 /* TODO: Find a better place for those 2 */
                 RemoteDataAvailable = false;
                 LocalDataAvailable = false;
@@ -56,6 +70,7 @@ namespace UTHPortal.ViewModel
                 );
 
                 // Check if we have a saved view for the current course
+                AllAnnouncements = new List<CourseAnnounceEx>();
                 await GetSavedView();
 
                 // Perform the refresh
@@ -73,8 +88,8 @@ namespace UTHPortal.ViewModel
 
         protected override async Task ValidateDisplayData()
         {
-            bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
 
+            bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
             if (!RemoteDataAvailable && !LocalDataAvailable) {
                 // At this point I have no data to display
 
@@ -89,16 +104,10 @@ namespace UTHPortal.ViewModel
                 }
             }
             else {
-                /* If site has no announcements, then go to eclass tab */
-                PivotSelectedIndex = 0;
-                if (Data.Announcements.Site.Count == 0 &&
-                    Data.Announcements.Eclass.Count > 0) {
-                    PivotSelectedIndex = 1;
-                }
 
                 /* If no announcements are retrieved, then go back */
-                if (Data.Announcements.Site.Count == 0 &&
-                    Data.Announcements.Eclass.Count == 0) {
+                if ((Data.Announcements.Site == null || Data.Announcements.Site.Count == 0) &&
+                    (Data.Announcements.Eclass == null || Data.Announcements.Eclass.Count == 0)) {
                     await viewService.ShowMessageDialog(
                         "Δεν υπάρχουν διαθέσιμες ανακοινώσεις αυτή την στιγμή",
                         Data.Info.Name
@@ -106,8 +115,57 @@ namespace UTHPortal.ViewModel
 
                     navigationService.GoBack();
                 }
+                else {
+                    // At this point Data should NOT be null!
+
+                    // Populate the AllAnnouncements collection
+                    if (Data.Announcements.Site != null) {
+                        foreach (CourseAnnounce announce in Data.Announcements.Site) {
+                            var newAnnounce = new CourseAnnounceEx(announce);
+                            newAnnounce.Source = "ιστοσελίδα";
+
+                            AllAnnouncements.Add(newAnnounce);
+                        }
+                    }
+
+                    if (Data.Announcements.Eclass != null) {
+                        foreach (CourseAnnounce announce in Data.Announcements.Eclass) {
+                            var newAnnounce = new CourseAnnounceEx(announce);
+                            newAnnounce.Source = "eclass";
+
+                            AllAnnouncements.Add(newAnnounce);
+                        }
+                    }
+
+                    // Sort the collection
+                    AllAnnouncements = AllAnnouncements.OrderBy(announce => announce.Date)
+                                                       .Reverse()
+                                                       .ToList();
+                }
             }
+
         }
 
+    }
+    
+    public class CourseAnnounceEx : CourseAnnounce
+    {
+        public CourseAnnounceEx()
+        { }
+
+        public CourseAnnounceEx(CourseAnnounce announce)
+        {
+            // TODO: Find a better way for this!
+            Date = announce.Date;
+            HasTime = announce.HasTime;
+            Html = announce.Html;
+            Link = announce.Link;
+            Plaintext = announce.Plaintext;
+            Title = announce.Title;
+        }
+
+        // Can be site, eclass or email
+        public string Source
+        { get; set; }
     }
 }
