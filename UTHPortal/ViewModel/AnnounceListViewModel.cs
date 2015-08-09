@@ -20,7 +20,7 @@ namespace UTHPortal.ViewModel
                     Announce newEntry = new Announce();
                     newEntry.Title = "Εικονική πόλη για την από κοινού εκπαίδευση";
                     newEntry.Plaintext = "Το Πανεπιστήμιο Θεσσαλίας, Τμήμα Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών, συμμετέχει στην ανάπτυξη εικονικού περιβάλλοντος πόλης μέσα από το οποίο μαθητές και φοιτητές μπορούν να αναπτύσσουν δεξιότητες σε θετικές επιστήμες, μαθηματικά, και τεχνολογία.  Το ερευνητικό σχέδιο eCity: Virtual City Environment for Engineering Problem-based Learning (http://eCity-project.eu) χρηματοδοτείται με την υποστήριξη του προγράμματος Δια Βίου Μάθησης της Ευρωπαϊκής Επιτροπής. Συντονιστής του σχεδίου είναι το Instituto Superior de Engeharia do Porto της Πορτογαλίας ενώ συμμετέχουν, εκτός από το Πανεπιστήμιο Θεσσαλίας, οργανισμοί από την Ιταλία, Ισπανία, και Τουρκία.\nΠληροφορίες";
-                    newEntry.Date = new DateTime(2014, 9, 23);
+                    newEntry.Date = new DateTime(2015, 8-i, 7);
 
                     Data.Entries.Add(newEntry);
                 }
