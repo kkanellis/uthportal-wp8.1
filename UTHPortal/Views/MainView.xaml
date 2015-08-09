@@ -73,35 +73,32 @@
         <Image Source="/Assets/panepistimio_thessalias.jpg"
                Stretch="UniformToFill"></Image>
         -->
-        <Hub Header="UTHPortal" Foreground="#FFA20025" RenderTransformOrigin="0.5,0.5" Background="White">
-            <!--
-            <Hub.Background>
-                <ImageBrush ImageSource="/Assets/panorama.jpg" />
-            </Hub.Background>
-            -->
-            <HubSection Header="ΠΑΝΕΠΙΣΤΗΜΙΟ">
-                <DataTemplate>
-                    <GridView ItemsSource="{Binding UniversityButtonList}"
+        <Pivot  RenderTransformOrigin="0.5,0.5" Background="White">
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock Text="πανεπιστήμιο" Foreground="#FFA20025" />
+                </PivotItem.Header>
+                <GridView ItemsSource="{Binding UniversityButtonList}"
                               ItemTemplate="{StaticResource Standard200x180TileItemTemplate}"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
                               IsItemClickEnabled="True"  
                               >
 
-                    </GridView>
-                </DataTemplate>
-            </HubSection>
-			<HubSection Header="ΣΧΟΛΗ">
-                <DataTemplate>
-                    <GridView ItemsSource="{Binding DeptButtonList}"
+                </GridView>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock Text="σχολή" Foreground="#FFA20025" />
+                </PivotItem.Header>
+                <GridView ItemsSource="{Binding DeptButtonList}"
                               ItemTemplate="{StaticResource Standard200x180TileItemTemplate}"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
                                IsItemClickEnabled="True"  
                                     >
-                    </GridView>
-                </DataTemplate>
-            </HubSection>
-		</Hub>
+                </GridView>
+            </PivotItem>
+		</Pivot>
 	</Grid>
 </Page>

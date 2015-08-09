@@ -95,6 +95,7 @@
     <Compile Include="Common\Converters\DateConverter.cs" />
     <Compile Include="Common\Converters\EnglishDayToGreekDayConverter.cs" />
     <Compile Include="Common\Converters\ListCountToVisibilityConverter.cs" />
+    <Compile Include="Common\Converters\PrettyDateConverter.cs" />
     <Compile Include="Common\ILoggerService.cs" />
     <Compile Include="Common\INavigationService.cs" />
     <Compile Include="Common\IStorageService.cs" />
@@ -174,6 +175,7 @@
     <Content Include="Assets\appbar.newspaper.png" />
     <Content Include="Assets\appbar.social.uservoice.png" />
     <Content Include="Assets\appbar.weather.sun.png" />
+    <Content Include="Assets\arrow-right.png" />
     <Content Include="Assets\kentavros.jpg" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\mainimage_blur.png" />

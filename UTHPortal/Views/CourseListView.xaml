@@ -39,13 +39,13 @@
 
                 <TextBlock Text="{Binding Info.Name}"
 							           TextWrapping="Wrap"
-							           Style="{ThemeResource SubheaderTextBlockStyle}"
+							           Style="{ThemeResource ListViewItemTextBlockStyle}"
                                     />
                 <TextBlock Grid.Column="1"
 								       Text="{Binding Code}"
                                        TextAlignment="Center"
                                        Margin="0,7.5,5,0"
-                                       Style="{ThemeResource ComboBoxPlaceholderTextBlockStyle}"
+                                       Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"
                                     />
             </Grid>
         </DataTemplate>

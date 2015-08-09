@@ -60,6 +60,7 @@
 						   />
          
                 <HyperlinkButton Content="{Binding entry.Link}"
+                                 NavigateUri="{Binding entry.Link}"
                                  Margin="0,0,0,10"
                                  FontSize="15">
                 	<HyperlinkButton.Foreground>
@@ -70,13 +71,6 @@
                 	</HyperlinkButton.Foreground>
                 </HyperlinkButton>
 
-                <!--
-                <TextBlock Text="{Binding entry.Plaintext}"
-					TextWrapping="Wrap"
-					TextAlignment="Justify"
-					Style="{ThemeResource BaseTextBlockStyle}" Foreground="Black"
-                        />
-                -->
             </StackPanel>
 		</ScrollViewer>
         
