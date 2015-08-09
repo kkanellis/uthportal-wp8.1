@@ -53,17 +53,17 @@
                                 Foreground="LightGray"
                     />
                     </StackPanel>
-                    <Grid Grid.Column="1"
-                          >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="8*" />
-                        </Grid.RowDefinitions>
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical"
+                                >
                         <TextBlock Text="{Binding Date, Converter={StaticResource PrettyDateConverter}}"
-                               TextAlignment="Right"                               
-                               Style="{ThemeResource ListViewItemContentTextBlockStyle}"
-                               Grid.Row="1"/>
-                    </Grid>
+                                   TextAlignment="Center"                               
+                                   Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                   Margin="0,5,0,8"
+                                   />
+                        <Image Source="../Assets/arrow-right.png"
+                               />
+                    </StackPanel>
                 </Grid>
             </Border>
         </DataTemplate>

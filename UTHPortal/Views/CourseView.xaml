@@ -14,7 +14,7 @@
                         Type={Binding Course, Source={StaticResource Locator}}}"
     DataContext="{Binding Course, Source={StaticResource Locator}}"
     >
-    
+
     <Interactivity:Interaction.Behaviors>
         <!-- PageLoaded Behaviour -->
         <Core:EventTriggerBehavior EventName="Loaded">
@@ -22,74 +22,113 @@
         </Core:EventTriggerBehavior>
     </Interactivity:Interaction.Behaviors>
 
-    
     <Page.Resources>
         <conv:ListCountToVisibilityConverter x:Key="ListCountConverter" />
+        <conv:PrettyDateConverter x:Key="PrettyDateConverter" />
+        <Color x:Key="AppBackgroundBrush">#FFA20025</Color>
+        
         <DataTemplate x:Key="CourseItemTemplate">
-            <StackPanel Orientation="Vertical"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Stretch"
-							Margin="0,0,0,10"
-                            >
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="Tapped">
-                        <Core:InvokeCommandAction Command="{Binding AnnounceList.ShowDetails, Mode=OneWay, Source={StaticResource Locator}}"
+            <Border BorderBrush="Gainsboro" BorderThickness="0,0,0,1">
+                <Grid Margin="0,10,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding AnnounceList.ShowDetails, Mode=OneWay, Source={StaticResource Locator}}"
 										CommandParameter="{Binding Mode=OneWay}"/>
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-                <TextBlock Grid.Column="1"
-									Margin="0,0,0,0"
-									Text="{Binding Title}"
-									TextWrapping="Wrap"
-									TextTrimming="CharacterEllipsis"
-									MaxLines="2" Style="{ThemeResource SubheaderTextBlockStyle}" LineHeight="26.667"
-                                       />
-                <TextBlock Text="{Binding Plaintext}"
-								TextAlignment="Justify"
-								TextWrapping="Wrap"
-								TextTrimming="CharacterEllipsis"
-								MaxLines="5"
-								Style="{ThemeResource ListViewItemContentTextBlockStyle}"
-                                       />
-            </StackPanel>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+
+                        <TextBlock Text="{Binding Title}"
+                                   Margin="0,0,10,0"
+                                TextWrapping="Wrap"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="2"
+                                Style="{ThemeResource ListViewItemTextBlockStyle}"
+                                LineHeight="27"
+                     />
+                        <TextBlock Text="{Binding Plaintext}"
+                                TextWrapping="Wrap"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="1"
+                                Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                Foreground="LightGray"
+                    />
+                        <TextBlock Text="{Binding Source}"
+                                   Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                   Foreground="LightGoldenrodYellow"
+                                   />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical"
+                                >
+                        <TextBlock Text="{Binding Date, Converter={StaticResource PrettyDateConverter}}"
+                                   TextAlignment="Center"                               
+                                   Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                   Margin="0,5,0,8"
+                                   />
+                        <Image Source="../Assets/arrow-right.png"
+                               />
+                    </StackPanel>
+                </Grid>
+            </Border>
         </DataTemplate>
-    </Page.Resources>
-    
+   </Page.Resources>
+
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Label="Ανανέωση"
                         Icon="Refresh"
                         Command="{Binding RefreshCommand}"
-                        IsEnabled="{Binding IsBusy}"
+                        IsEnabled="{Binding IsRefreshing}"
                         />
         </CommandBar>
     </Page.BottomAppBar>
-    
+
     <Pivot Title="UTHPortal"
-           SelectedIndex="{Binding PivotSelectedIndex}" Background="#FFA20025"
            >
-        <PivotItem Header="ιστοσελίδα">
+        <Pivot.Background>
+            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
+        </Pivot.Background>
+        
+        <PivotItem Header="ανακοινώσεις">
             <ScrollViewer>
                 <StackPanel Orientation="Vertical">
-                    <ListView ItemsSource="{Binding Data.Announcements.Site}"
+                    <ListView ItemsSource="{Binding AllAnnouncements}"
                           ItemTemplate="{StaticResource CourseItemTemplate}"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch">
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        
                     </ListView>
                     <TextBlock Text="Δεν υπάρχουν διαθέσιμες ανακοινώσεις"
                                Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
-                               Visibility="{Binding Data.Announcements.Site.Count, Converter={StaticResource ListCountConverter}}">
+                               Visibility="{Binding AllAnnouncements.Count, Converter={StaticResource ListCountConverter}}">
                     </TextBlock>
                 </StackPanel>
             </ScrollViewer>
         </PivotItem>
-        <PivotItem Header="eclass">
-            <ScrollViewer>
+        <PivotItem Header="πληροφορίες">
+            <!--<ScrollViewer>
                 <StackPanel Orientation="Vertical">
                 <ListView ItemsSource="{Binding Data.Announcements.Eclass}"
                           ItemTemplate="{StaticResource CourseItemTemplate}"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch">
+                    
+                    <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                 
                 </ListView>
                 <TextBlock Text="Δεν υπάρχουν διαθέσιμες ανακοινώσεις"
@@ -97,7 +136,7 @@
                                Visibility="{Binding Data.Announcements.Eclass.Count, Converter={StaticResource ListCountConverter}}">
                 </TextBlock>
                 </StackPanel>
-            </ScrollViewer>
+            </ScrollViewer>-->
         </PivotItem>
     </Pivot>
 </Page>
