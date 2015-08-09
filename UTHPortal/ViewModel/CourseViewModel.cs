@@ -119,6 +119,7 @@ namespace UTHPortal.ViewModel
                     // At this point Data should NOT be null!
 
                     // Populate the AllAnnouncements collection
+                    AllAnnouncements.Clear();
                     if (Data.Announcements.Site != null) {
                         foreach (CourseAnnounce announce in Data.Announcements.Site) {
                             var newAnnounce = new CourseAnnounceEx(announce);
