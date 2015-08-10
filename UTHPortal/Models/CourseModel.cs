@@ -35,6 +35,9 @@ namespace UTHPortal.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("instructor")]
+        public string Instructor { get; set; }
+
         [JsonProperty("code_site")]
         public string CodeSite { get; set; }
 
@@ -49,5 +52,8 @@ namespace UTHPortal.Models
 
         [JsonProperty("semester")]
         public Int32 Semester { get; set; }
+
+        [JsonProperty("required")]
+        public bool Required { get; set; }
     }
 }
