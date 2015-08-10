@@ -18,7 +18,8 @@
     >
 
     <Page.Resources>
-        <conv:DateConverter x:Key="DateConverter"/>
+        <conv:AnnounceEntryDateConverter x:Key="AnnounceEntryDateConverter"/>
+        <Color x:Key="AppBackgroundBrush">#881A3F</Color>
     </Page.Resources>
 
     <Interactivity:Interaction.Behaviors>
@@ -27,8 +28,12 @@
 		</Core:EventTriggerBehavior>
 	</Interactivity:Interaction.Behaviors>
 
-	<Grid x:Name="LayoutRoot" Background="{ThemeResource AppBarItemForegroundThemeBrush}">
-
+    <Grid x:Name="LayoutRoot"
+          >
+        <Grid.Background>
+            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
+        </Grid.Background>
+        
 		<Grid.ChildrenTransitions>
 			<TransitionCollection>
 				<EntranceThemeTransition/>
@@ -36,50 +41,59 @@
 		</Grid.ChildrenTransitions>
 
 		<Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<!-- Title Panel -->
-		<StackPanel Grid.Row="0" Margin="19,0,0,0">
-			<TextBlock Text="UTHPortal" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,15" Foreground="Black"/>
-		</StackPanel>
-        
-		<ScrollViewer Grid.Row="1" Margin="19,0,19,0">
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="UTHPortal"
+                       Style="{ThemeResource TitleTextBlockStyle}"
+                       Margin="19,12,0,15"
+                       />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" 
+                    >
 			<StackPanel VerticalAlignment="Stretch"
 				HorizontalAlignment="Stretch"
+                      Margin="19,0,19,0"
                         >
 				<TextBlock Text="{Binding entry.Title}"
 					TextWrapping="Wrap"
-					Style="{ThemeResource SubheaderTextBlockStyle}" Foreground="#FFA20025"
+                    MaxLines="4"
+					Style="{ThemeResource SubheaderTextBlockStyle}" 
                            />
-				<TextBlock Text="{Binding entry.Date, ConverterParameter=dddd\, dd MMMM\, yyyy HH:mm, Converter={StaticResource DateConverter}}"
+				<TextBlock Text="{Binding entry, Converter={StaticResource AnnounceEntryDateConverter}}"
 					Margin="0,2,0,0"
-					Style="{ThemeResource ControlHeaderTextBlockStyle}" Foreground="{ThemeResource AppBarBackgroundThemeBrush}"
+					Style="{ThemeResource ControlHeaderTextBlockStyle}"
+                           Foreground="LightGray"
 						   />
-         
-                <HyperlinkButton Content="{Binding entry.Link}"
-                                 NavigateUri="{Binding entry.Link}"
-                                 Margin="0,0,0,10"
-                                 FontSize="15">
-                	<HyperlinkButton.Foreground>
-                		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                			<GradientStop Color="Black" Offset="0"/>
-                			<GradientStop Color="#FFA20025" Offset="1"/>
-                		</LinearGradientBrush>
-                	</HyperlinkButton.Foreground>
+
+                <HyperlinkButton NavigateUri="{Binding entry.Link}">
+                    <TextBlock
+                             Margin="0,0,0,10"
+                             FontSize="15"
+                             Foreground="LightGoldenrodYellow">
+                    <Underline>
+                        <Run Text="Σελίδα ανακοίνωσης" />
+                    </Underline>
+                    </TextBlock>
                 </HyperlinkButton>
 
             </StackPanel>
-		</ScrollViewer>
-        
-        <WebView Grid.Row="2"
-                 Margin="19,0,19,19"
+		</StackPanel>
+        <ScrollViewer Grid.Row="2">
+            <ScrollViewer.Background>
+                <SolidColorBrush Color="White" />
+            </ScrollViewer.Background>
+            <WebView
+                 Margin="19,19,19,19"
                  common:WebViewHelper.Html="{Binding entry.Html}"
                  >
 
-        </WebView>
+            </WebView>
+        </ScrollViewer>
 
     </Grid>
 </Page>
