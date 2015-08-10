@@ -13,12 +13,12 @@ namespace UTHPortal.ViewModel
         /// <summary>
         /// List that contains all announcements sorted by date.
         /// </summary>
-        public IList<CourseAnnounceEx> AllAnnouncements
+        public IList<AnnounceEx> AllAnnouncements
         {
             get { return _allAnnouncements; }
             set { Set(() => AllAnnouncements, ref _allAnnouncements, value); }
         }
-        private IList<CourseAnnounceEx> _allAnnouncements;
+        private IList<AnnounceEx> _allAnnouncements;
 
         public CourseViewModel()
         {
@@ -35,10 +35,10 @@ namespace UTHPortal.ViewModel
                     Name = "Αριθμητική Ανάλυση"
                 };
 
-                AllAnnouncements = new List<CourseAnnounceEx>();
+                AllAnnouncements = new List<AnnounceEx>();
                 for (int i = 0; i < 4; i++) {
-                    var ca = new CourseAnnounceEx();
-                    var cb = new CourseAnnounceEx();
+                    var ca = new AnnounceEx();
+                    var cb = new AnnounceEx();
 
                     ca.Date = new DateTime(2015, 8 - i, 9);
                     cb.Date = new DateTime(2015, 7 - i, 13);
@@ -70,7 +70,7 @@ namespace UTHPortal.ViewModel
                 );
 
                 // Check if we have a saved view for the current course
-                AllAnnouncements = new List<CourseAnnounceEx>();
+                AllAnnouncements = new List<AnnounceEx>();
                 await GetSavedView();
 
                 // Perform the refresh
@@ -121,8 +121,8 @@ namespace UTHPortal.ViewModel
                     // Populate the AllAnnouncements collection
                     AllAnnouncements.Clear();
                     if (Data.Announcements.Site != null) {
-                        foreach (CourseAnnounce announce in Data.Announcements.Site) {
-                            var newAnnounce = new CourseAnnounceEx(announce);
+                        foreach (Announce announce in Data.Announcements.Site) {
+                            var newAnnounce = new AnnounceEx(announce);
                             newAnnounce.Source = "ιστοσελίδα";
 
                             AllAnnouncements.Add(newAnnounce);
@@ -130,8 +130,8 @@ namespace UTHPortal.ViewModel
                     }
 
                     if (Data.Announcements.Eclass != null) {
-                        foreach (CourseAnnounce announce in Data.Announcements.Eclass) {
-                            var newAnnounce = new CourseAnnounceEx(announce);
+                        foreach (Announce announce in Data.Announcements.Eclass) {
+                            var newAnnounce = new AnnounceEx(announce);
                             newAnnounce.Source = "eclass";
 
                             AllAnnouncements.Add(newAnnounce);
@@ -149,12 +149,12 @@ namespace UTHPortal.ViewModel
 
     }
     
-    public class CourseAnnounceEx : CourseAnnounce
+    public class AnnounceEx : Announce
     {
-        public CourseAnnounceEx()
+        public AnnounceEx()
         { }
 
-        public CourseAnnounceEx(CourseAnnounce announce)
+        public AnnounceEx(Announce announce)
         {
             // TODO: Find a better way for this!
             Date = announce.Date;

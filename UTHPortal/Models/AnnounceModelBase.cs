@@ -47,5 +47,8 @@ namespace UTHPortal.Models
 
         [JsonProperty("link")]
         public String Link { get; set; }
+
+        [JsonProperty("has_time")]
+        public bool HasTime { get; set; }
     }
 }

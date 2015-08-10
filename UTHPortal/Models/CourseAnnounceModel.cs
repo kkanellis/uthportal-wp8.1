@@ -12,13 +12,13 @@ namespace UTHPortal.Models
     public class CourseAnnounceModel : ObservableObject 
     {
         [JsonProperty("emails")]
-        public IList<CourseAnnounce> Emails { get; set; }
+        public IList<Announce> Emails { get; set; }
 
         [JsonProperty("site")]
-        public IList<CourseAnnounce> Site { get; set; }
+        public IList<Announce> Site { get; set; }
 
         [JsonProperty("eclass")]
-        public IList<CourseAnnounce> Eclass { get; set; }
+        public IList<Announce> Eclass { get; set; }
 
         [JsonProperty("first_updated")]
         public DateTime FirstUpdated { get; set; }
@@ -32,10 +32,5 @@ namespace UTHPortal.Models
         [JsonProperty("link_eclass")]
         public string LinkEclass { get; set; }
     }
-
-    public class CourseAnnounce : Announce
-    {
-        [JsonProperty("has_time")]
-        public bool HasTime { get; set; }
-    }
+    
 }
