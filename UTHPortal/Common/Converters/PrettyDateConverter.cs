@@ -5,8 +5,6 @@ namespace UTHPortal.Common.Converters
 {
     class PrettyDateConverter : IValueConverter
     {
-        private string [] strDays = { "Δευ", "Τρι", "Τετ", "Πέμπ", "Παρ", "Σαβ", "Κυρ" }; 
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var date = ((DateTime)value).Date;
