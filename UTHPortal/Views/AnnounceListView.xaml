@@ -16,7 +16,6 @@
     DataContext="{Binding AnnounceList, Source={StaticResource Locator}}"
     >
     <Page.Resources>
-        <conv:DateConverter x:Key="DateConverter"/>
         <conv:ListCountToVisibilityConverter x:Key="ListCountConverter" />
         <conv:PrettyDateConverter x:Key="PrettyDateConverter" />
         <Color x:Key="AppBackgroundBrush">#FFA20025</Color>
