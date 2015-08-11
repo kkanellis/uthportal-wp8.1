@@ -8,7 +8,7 @@
              xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
              RequestedTheme="Dark">
   <Application.Resources>
-    <ResourceDictionary x:Key="MainDictionary">
+    <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Design/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>

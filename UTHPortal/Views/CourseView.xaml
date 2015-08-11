@@ -25,12 +25,12 @@
     <Page.Resources>
         <conv:ListCountToVisibilityConverter x:Key="ListCountConverter" />
         <conv:PrettyDateConverter x:Key="PrettyDateConverter" />
-        
+
         <DataTemplate x:Key="CourseAnnounceItemTemplate">
-            <Border BorderBrush="Gainsboro" BorderThickness="0,0,0,1">
-                <Grid Margin="0,10,0,15">
+            <Border BorderBrush="Silver" BorderThickness="0,0,0,1">
+                <Grid Margin="30,15,15,15">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="7*" />
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical">
@@ -53,12 +53,14 @@
                                 TextWrapping="Wrap"
                                 TextTrimming="CharacterEllipsis"
                                 MaxLines="1"
-                                Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"
                                 Foreground="LightGray"
+                                   FontSize="18"
                     />
                         <TextBlock Text="{Binding Source}"
-                                   Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                   Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"
                                    Foreground="LightGoldenrodYellow"
+                                   FontSize="18"
                                    />
                     </StackPanel>
                     <StackPanel Grid.Column="1"
@@ -66,7 +68,7 @@
                                 >
                         <TextBlock Text="{Binding Date, Converter={StaticResource PrettyDateConverter}}"
                                    TextAlignment="Center"                               
-                                   Style="{ThemeResource ListViewItemContentTextBlockStyle}"
+                                   Style="{ThemeResource MessageDialogContentStyle}"
                                    Margin="0,5,0,8"
                                    />
                         <Image Source="../Assets/arrow-right.png"
@@ -93,7 +95,9 @@
             <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
         </Pivot.Background>
         
-        <PivotItem Header="ανακοινώσεις">
+        <PivotItem Header="ανακοινώσεις"
+                   Margin="-10,-5,-10,0"
+                   >
             <ScrollViewer>
                 <StackPanel Orientation="Vertical">
                     <ListView ItemsSource="{Binding AllAnnouncements}"
@@ -110,6 +114,7 @@
                         
                     </ListView>
                     <TextBlock Text="Δεν υπάρχουν διαθέσιμες ανακοινώσεις"
+                               Margin="30,0,20,0"
                                Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
                                Visibility="{Binding AllAnnouncements.Count, Converter={StaticResource ListCountConverter}}">
                     </TextBlock>
@@ -118,23 +123,33 @@
         </PivotItem>
         <PivotItem Header="πληροφορίες">
             <!--<ScrollViewer>
-                <StackPanel Orientation="Vertical">
-                <ListView ItemsSource="{Binding Data.Announcements.Eclass}"
-                          ItemTemplate="{StaticResource CourseItemTemplate}"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch">
-                    
-                    <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                
-                </ListView>
-                <TextBlock Text="Δεν υπάρχουν διαθέσιμες ανακοινώσεις"
-                               Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
-                               Visibility="{Binding Data.Announcements.Eclass.Count, Converter={StaticResource ListCountConverter}}">
-                </TextBlock>
+                <StackPanel Orientation="Vertical"
+                            >
+                        <TextBlock Text="{Binding Data.Info.Name}"
+                                   Style="{ThemeResource SubheaderTextBlockStyle}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="27" 
+                                   />
+                    <TextBlock Text="{Binding Data.Info.Instructor}"
+                               Style="{ThemeResource ComboBoxPlaceholderTextBlockStyle}"
+                               MaxLines="2"
+                               />
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Εξάμηνο"
+                                       Style="{ThemeResource TitleTextBlockStyle}">
+                            </TextBlock>
+                            <TextBlock Text="Κωδικός Μαθήματος"
+                                       Style="{ThemeResource TitleTextBlockStyle}"
+                                       >
+                                
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </ScrollViewer>-->
         </PivotItem>
