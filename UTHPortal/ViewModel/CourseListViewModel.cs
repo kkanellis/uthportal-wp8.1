@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using UTHPortal.Models;
 using UTHPortal.Views;
+using GalaSoft.MvvmLight.Threading;
 
 namespace UTHPortal.ViewModel
 {
@@ -15,21 +18,31 @@ namespace UTHPortal.ViewModel
         }
         private IEnumerable<CourseModel> _selectedCourses;
 
+        public IEnumerable<IGrouping<int, CourseModel> > GrouppedCourses
+        {
+            get { return _grouppedCourses; }
+            set { Set(() => GrouppedCourses, ref _grouppedCourses, value); }
+        }
+        private IEnumerable<IGrouping<int, CourseModel> > _grouppedCourses;
+
         public CourseListViewModel()
         {
-            if (IsInDesignMode)
-            {
-                Data = new CourseAllModel();
-                Data.Courses = new ObservableCollection<CourseModel>();
-                for (int i = 0; i < 5; i++)
-                {
-                    CourseModel newEntry = new CourseModel();
+            if (IsInDesignMode) {
+                var OrderedCourses = new List<CourseModel>();
+                for (int i = 0; i < 5; i++) {
+                    var newEntry = new CourseModel();
                     newEntry.Info = new CourseInfoModel();
                     newEntry.Info.Name = "Προγραμματισμός ΙΙ";
-                    newEntry.Code = "CE121";
+                    newEntry.Info.CodeSite = "ΗΜ999";
+                    newEntry.Info.Semester = (i / 2 + 1);
+                    newEntry.Info.Required = (i % 2 == 0);
 
-                    Data.Courses.Add(newEntry);
+                    OrderedCourses.Add(newEntry);
                 }
+
+                GrouppedCourses = OrderedCourses.GroupBy(course => course.Info.Semester)
+                                                .OrderBy(course => course.Key)
+                                                .ToList();
             }
         }
 
@@ -54,22 +67,28 @@ namespace UTHPortal.ViewModel
             }
         }
 
-        protected override async void ExecutePageLoaded()
+        protected override async Task RetrieveSavedView()
         {
-            if (navigationService.StateExists(this.GetType()))
-            {
-                Url = (string)navigationService.GetAndRemoveState(this.GetType());
+            await base.RetrieveSavedView();
 
-                await GetSavedView();
-
-                /* Get the selected courses */
-                SelectedCourses = (List<CourseModel>)storageService.GetSettingsEntry("SelectedCourses");
-
-                if ((bool)storageService.GetSettingsEntry("AutoRefresh"))
-                {
-                    RefreshCommand.Execute(null);
-                }
-            }
+            // Get the user-defined courses
+            SelectedCourses = (List<CourseModel>)storageService.GetSettingsEntry("SelectedCourses");
         }
+
+        protected override async Task Postproccess()
+        {
+            await Task.Run(() => {
+                var orderedCourses = Data.Courses.OrderBy(course => course.Info.Semester)
+                                                 .ThenBy(course => course.Info.Required)
+                                                 .ThenBy(course => course.Info.CodeSite)
+                                                 .GroupBy(course => course.Info.Semester)
+                                                 .OrderBy(couse => couse.Key)
+                                                 .ToList();
+
+                DispatcherHelper.CheckBeginInvokeOnUI(() => {
+                    GrouppedCourses = orderedCourses;
+                });
+            });
+        } 
     }
 }

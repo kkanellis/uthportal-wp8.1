@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Threading;
 using UTHPortal.Models;
 
 namespace UTHPortal.ViewModel
@@ -56,20 +54,15 @@ namespace UTHPortal.ViewModel
             if (navigationService.StateExists(this.GetType())) {
                 Url = (string)navigationService.GetAndRemoveState(this.GetType());
 
-                await GetSavedView();
-
-                if ((bool)storageService.GetSettingsEntry("AutoRefresh")) {
+                await RetrieveSavedView();
+                await DispatcherHelper.RunAsync(() => {
                     RefreshCommand.Execute(null);
-                }
-                else {
-                    await ValidateDisplayData();
-                }
-            }
+                });
+           }
         }
 
-        protected override async Task ValidateDisplayData()
+        protected override async Task ValidateView()
         {
-            bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
             bool LocalDataValid = LocalDataAvailable && !IsOldMenuSaved();
 
             if (!RemoteDataAvailable && !LocalDataValid) {
@@ -79,9 +72,7 @@ namespace UTHPortal.ViewModel
                         "Μενού λέσχης"
                     );
 
-                    if (AutoRefresh) {
-                        navigationService.GoBack();
-                    }
+                    navigationService.GoBack();
                 }
             }
             else if (RemoteDataAvailable || (!RemoteDataAvailable && LocalDataValid)) {

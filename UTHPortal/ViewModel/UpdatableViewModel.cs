@@ -84,6 +84,32 @@ namespace UTHPortal.ViewModel
                 viewService = SimpleIoc.Default.GetInstance<IViewService>();
             }
         }
+        
+        /// <summary>
+        /// Command bind to behaviour. Executed when page has been loaded.
+        /// </summary>
+        public RelayCommand PageLoaded
+        {
+            get
+            {
+                return _pageLoaded
+                    ?? (_pageLoaded = new RelayCommand(ExecutePageLoaded));
+            }
+        }
+        private RelayCommand _pageLoaded;
+
+        protected virtual async void ExecutePageLoaded()
+        {
+            if (navigationService.StateExists(this.GetType())) {
+                Url = (string)navigationService.GetAndRemoveState(this.GetType());
+
+                await RetrieveSavedView();
+
+                await DispatcherHelper.RunAsync(() => {
+                    RefreshCommand.Execute(null);
+                });
+            }
+        }
 
         /// <summary>
         /// Gets the RefreshCommand.
@@ -99,53 +125,40 @@ namespace UTHPortal.ViewModel
         private RelayCommand _refreshCommand;
 
         /// <summary>
-        /// Does the neccessary actions for the refresh of the data
+        /// Tries to fetch the new data.
         /// </summary>
         protected virtual async void ExecuteRefreshCommand()
         {
-            IsRefreshing = true;
+                IsRefreshing = true;
 
-            await viewService.ShowStatusBar("Ενημέρωση...", null);
+                await viewService.ShowStatusBar("Ενημέρωση...", null);
+                
+                var newData = await dataService.RefreshAndSave(
+                    Url,
+                    typeof(T)
+                );
 
-            var newData = await dataService.RefreshAndSave(
-                Url,
-                typeof(T)
-            );
+                if (newData != null) {
+                    Data = (T)newData;
+                    viewService.ModifyStatusBar("Τελευταία Ενημέρωση: " + DateTime.Now.ToString("HH:mm"), 0.0);
 
-            if (newData != null) {
-                Data = (T)newData;
-                viewService.ModifyStatusBar("Τελευταία Ενημέρωση: " + DateTime.Now.ToString("HH:mm"), 0.0);
+                    RemoteDataAvailable = true;
+                    await Postproccess();
+                }
+                else {
+                    viewService.ModifyStatusBar("Αποτυχία ενημέρωσης!", 0.0);
+                    RemoteDataAvailable = false;
+                }
 
-                RemoteDataAvailable = true;
-            }
-            else {
-                viewService.ModifyStatusBar("Αποτυχία ενημέρωσης!", 0.0);
-                RemoteDataAvailable = false;
-            }
+                IsRefreshing = false;
 
-            IsRefreshing = false;
-
-            await ValidateDisplayData();
+                await ValidateView();
         }
-
-        private RelayCommand _pageLoaded;
-        /// <summary>
-        /// Command bind to behaviour. Executed when page has been loaded
-        /// </summary>
-        public RelayCommand PageLoaded
-        {
-            get
-            {
-                return _pageLoaded
-                    ?? (_pageLoaded = new RelayCommand(ExecutePageLoaded));
-            }
-        }
-        protected abstract void ExecutePageLoaded();
 
         /// <summary>
         /// Retrieves the local data of this view using the provided storage service.
         /// </summary>
-        protected async Task GetSavedView()
+        protected virtual async Task RetrieveSavedView()
         {
             string json = await storageService.GetAPIData(Url);
 
@@ -157,12 +170,25 @@ namespace UTHPortal.ViewModel
             }
             else {
                 LocalDataAvailable = true;
+                await Postproccess();
             }
         }
 
-        protected virtual Task ValidateDisplayData()
+        /// <summary>
+        /// Executed right after Data are changed. Typically logic for doing actions using Data.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task Postproccess()
         {
-            // Dummy return
+            return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Executed after fetching was over (successfull or not). Used to automate view methods (like go back if no info are available).
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task ValidateView()
+        {
             return Task.FromResult(false);
         }
     }

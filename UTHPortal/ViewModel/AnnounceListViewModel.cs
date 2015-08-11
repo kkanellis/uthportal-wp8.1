@@ -49,22 +49,5 @@ namespace UTHPortal.ViewModel
         }
         private RelayCommand<Announce> _showDetails;
 
-
-        protected override async void ExecutePageLoaded()
-        {
-            if (navigationService.StateExists(this.GetType()))
-            {
-                Url = (string)navigationService.GetAndRemoveState(this.GetType());
-
-                await GetSavedView();
-
-                if ((bool)storageService.GetSettingsEntry("AutoRefresh")) {
-                    await DispatcherHelper.RunAsync(() => {
-                        RefreshCommand.Execute(null);
-                    });
-                }
-            }
-        }
-
     }
 }

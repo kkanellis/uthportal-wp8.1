@@ -32,7 +32,8 @@ namespace UTHPortal.ViewModel
                     Semester = 4,
                     LinkEclass = "http://eclass.uth.gr/eclass/courses/MHX118/",
                     LinkSite = "http://inf.uth.gr/cat=5&id=233",
-                    Name = "Αριθμητική Ανάλυση"
+                    Name = "Αριθμητική Ανάλυση",
+                    Instructor="Τσομπανοπούλου Παναγιώτα"
                 };
 
                 AllAnnouncements = new List<AnnounceEx>();
@@ -71,25 +72,51 @@ namespace UTHPortal.ViewModel
 
                 // Check if we have a saved view for the current course
                 AllAnnouncements = new List<AnnounceEx>();
-                await GetSavedView();
+                await RetrieveSavedView();
 
                 // Perform the refresh
-                bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
-                if (AutoRefresh) {
-                    await DispatcherHelper.RunAsync(() => {
-                        RefreshCommand.Execute(null);
-                    });
-                }
-                else {
-                    await ValidateDisplayData();
-                }
+                await DispatcherHelper.RunAsync(() => {
+                    RefreshCommand.Execute(null);
+                });
             }
         }
 
-        protected override async Task ValidateDisplayData()
+        protected override async Task Postproccess()
         {
+            AllAnnouncements = new List<AnnounceEx>();
 
-            bool AutoRefresh = (bool)storageService.GetSettingsEntry("AutoRefresh");
+            // Populate the AllAnnouncements collection
+            await Task.Run(() => {
+                if (Data.Announcements.Site != null) {
+                    foreach (Announce announce in Data.Announcements.Site) {
+                        var newAnnounce = new AnnounceEx(announce);
+                        newAnnounce.Source = "ιστοσελίδα";
+
+                        AllAnnouncements.Add(newAnnounce);
+                    }
+                }
+
+                if (Data.Announcements.Eclass != null) {
+                    foreach (Announce announce in Data.Announcements.Eclass) {
+                        var newAnnounce = new AnnounceEx(announce);
+                        newAnnounce.Source = "eclass";
+
+                        AllAnnouncements.Add(newAnnounce);
+                    }
+                }
+
+                // Sort the collection
+                var sortedAnnouncements = AllAnnouncements.OrderBy(announce => announce.Date)
+                                                   .Reverse()
+                                                   .ToList();
+                DispatcherHelper.CheckBeginInvokeOnUI(() => {
+                    AllAnnouncements = sortedAnnouncements;
+                });
+            });
+        }
+
+        protected override async Task ValidateView()
+        {
             if (!RemoteDataAvailable && !LocalDataAvailable) {
                 // At this point I have no data to display
 
@@ -98,10 +125,7 @@ namespace UTHPortal.ViewModel
                     "Πρόβλημα!"
                 );
 
-                /* Means we already tried to update */
-                if (AutoRefresh) {
-                    navigationService.GoBack();
-                }
+                navigationService.GoBack();
             }
             else {
 
@@ -114,34 +138,6 @@ namespace UTHPortal.ViewModel
                     );
 
                     navigationService.GoBack();
-                }
-                else {
-                    // At this point Data should NOT be null!
-
-                    // Populate the AllAnnouncements collection
-                    AllAnnouncements.Clear();
-                    if (Data.Announcements.Site != null) {
-                        foreach (Announce announce in Data.Announcements.Site) {
-                            var newAnnounce = new AnnounceEx(announce);
-                            newAnnounce.Source = "ιστοσελίδα";
-
-                            AllAnnouncements.Add(newAnnounce);
-                        }
-                    }
-
-                    if (Data.Announcements.Eclass != null) {
-                        foreach (Announce announce in Data.Announcements.Eclass) {
-                            var newAnnounce = new AnnounceEx(announce);
-                            newAnnounce.Source = "eclass";
-
-                            AllAnnouncements.Add(newAnnounce);
-                        }
-                    }
-
-                    // Sort the collection
-                    AllAnnouncements = AllAnnouncements.OrderBy(announce => announce.Date)
-                                                       .Reverse()
-                                                       .ToList();
                 }
             }
 
