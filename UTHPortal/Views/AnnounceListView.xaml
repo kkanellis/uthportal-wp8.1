@@ -18,7 +18,6 @@
     <Page.Resources>
         <conv:ListCountToVisibilityConverter x:Key="ListCountConverter" />
         <conv:PrettyDateConverter x:Key="PrettyDateConverter" />
-        <Color x:Key="AppBackgroundBrush">#FFA20025</Color>
 
         <!-- AnnounceItem Template -->
         <DataTemplate x:Key="AnnounceItemTemplate">

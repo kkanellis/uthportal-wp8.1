@@ -6,6 +6,6 @@
     xmlns:local="using:UTHPortal"
     >
 
+    <Color x:Key="AppBackgroundBrush">#881A3F</Color>
     
-
 </ResourceDictionary>

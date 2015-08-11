@@ -19,7 +19,6 @@
 
     <Page.Resources>
         <conv:AnnounceEntryDateConverter x:Key="AnnounceEntryDateConverter"/>
-        <Color x:Key="AppBackgroundBrush">#881A3F</Color>
     </Page.Resources>
 
     <Interactivity:Interaction.Behaviors>

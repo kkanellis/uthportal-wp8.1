@@ -96,6 +96,7 @@
     <Compile Include="Common\Converters\EnglishDayToGreekDayConverter.cs" />
     <Compile Include="Common\Converters\ListCountToVisibilityConverter.cs" />
     <Compile Include="Common\Converters\PrettyDateConverter.cs" />
+    <Compile Include="Common\Converters\RequiredToStringConverter.cs" />
     <Compile Include="Common\ILoggerService.cs" />
     <Compile Include="Common\INavigationService.cs" />
     <Compile Include="Common\IStorageService.cs" />

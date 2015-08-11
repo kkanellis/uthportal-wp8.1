@@ -25,7 +25,6 @@
     <Page.Resources>
         <conv:ListCountToVisibilityConverter x:Key="ListCountConverter" />
         <conv:PrettyDateConverter x:Key="PrettyDateConverter" />
-        <Color x:Key="AppBackgroundBrush">#881A3F</Color>
         
         <DataTemplate x:Key="CourseAnnounceItemTemplate">
             <Border BorderBrush="Gainsboro" BorderThickness="0,0,0,1">
