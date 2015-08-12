@@ -28,7 +28,8 @@
 
         <DataTemplate x:Key="CourseAnnounceItemTemplate">
             <Border BorderBrush="Silver" BorderThickness="0,0,0,1">
-                <Grid Margin="30,15,15,15">
+                <Grid Margin="30,15,15,15"
+                      >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*" />
                         <ColumnDefinition Width="*"/>

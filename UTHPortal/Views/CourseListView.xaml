@@ -139,56 +139,90 @@
             </PivotItem>
             <PivotItem Header="όλα"
                        Margin="-10,-5,-10,0">
-                <ScrollViewer>
-                    <StackPanel Orientation="Vertical">
-                        <ListView Grid.Row="1"
-                          ItemsSource="{Binding Source={StaticResource cvsCourses}}"
-                          ItemTemplate="{StaticResource CourseItemTemplate}"
-                          >
+                        <SemanticZoom>
+                        <SemanticZoom.ZoomedInView>
+                            <ListView Grid.Row="1"
+                                      ItemsSource="{Binding Source={StaticResource cvsCourses}}"
+                                      ItemTemplate="{StaticResource CourseItemTemplate}"
+                                      ScrollViewer.IsHorizontalScrollChainingEnabled="False"
+                                      >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+
+                                <ListView.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.HeaderContainerStyle>
+                                            <Style TargetType="ListViewHeaderItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </GroupStyle.HeaderContainerStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Background="Gainsboro"
+                                                        >
+                                                    <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                                                           TextAlignment="Center"
+                                                           Margin="0,10,0,15"
+                                                           >
+                                                        <TextBlock.Foreground>
+                                                            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
+                                                        </TextBlock.Foreground>
+                                                        <Run Text="Εξάμηνο" />
+                                                        <Run Text="{Binding Key}" /><Run Text="o"/>
+                                                    </TextBlock>
+
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+
+                            </ListView>
+                            <!--<TextBlock Text='Δεν υπαρχουν διαθεσιμα μαθήματα. Πατήστε το κουμπι "Ανανέωση" για ενημέρωση'
+                                   TextWrapping="Wrap"
+                                   Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
+                                   Visibility="{Binding GrouppedCourses.Count, Converter={StaticResource ListCountConverter}}"
+                                   Margin="30,0,20,0"
+                                   >
+                            </TextBlock>-->
+                             </SemanticZoom.ZoomedInView>
+                    <SemanticZoom.ZoomedOutView>
+                        <ListView ScrollViewer.IsHorizontalScrollChainingEnabled="False"
+                                  ItemsSource="{Binding Source={StaticResource cvsCourses}, Path=CollectionGroups}"
+                                  >
+                            <ListView.Background>
+                                <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
+                            </ListView.Background>
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                 </Style>
                             </ListView.ItemContainerStyle>
                             
-                            <ListView.GroupStyle>
-                                <GroupStyle HidesIfEmpty="True">
-                                    <GroupStyle.HeaderContainerStyle>
-                                        <Style TargetType="ListViewHeaderItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        </Style>
-                                    </GroupStyle.HeaderContainerStyle>
-                                    <GroupStyle.HeaderTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Background="Gainsboro"
-                                                        >
-                                                <TextBlock Style="{StaticResource TitleTextBlockStyle}"
-                                                           TextAlignment="Center"
-                                                           Margin="0,10,0,15"
-                                                           >
-                                                    <TextBlock.Foreground>
-                                                        <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-                                                    </TextBlock.Foreground>
-                                                        <Run Text="Εξάμηνο" />
-                                                        <Run Text="{Binding Key}" /><Run Typography.Variants="Superscript" Text="o"/>
-                                                </TextBlock>
-
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </GroupStyle.HeaderTemplate>
-                                </GroupStyle>
-                            </ListView.GroupStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Gainsboro"
+                                            Margin="10"
+                                            Padding="5">
+                                        <TextBlock Style="{ThemeResource ListViewItemTextBlockStyle}"
+                                                   TextAlignment="Center"
+                                                   >
+                                            <TextBlock.Foreground>
+                                                <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
+                                            </TextBlock.Foreground>
+                                                <Run Text="Εξάμηνο" />
+                                                <Run Text="{Binding Group.Key}"/><Run Text="o" />
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
 
                         </ListView>
-                        <TextBlock Text='Δεν υπαρχουν διαθεσιμα μαθήματα. Πατήστε το κουμπι "Ανανέωση" για ενημέρωση'
-                                   TextWrapping="Wrap"
-                                   Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
-                                   Visibility="{Binding GrouppedCourses.Count, Converter={StaticResource ListCountConverter}}"
-                                   Margin="30,0,20,0"
-                                   >
-                        </TextBlock>
-                    </StackPanel>
-                </ScrollViewer>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
             </PivotItem>   
         </Pivot>
         
