@@ -67,7 +67,7 @@ namespace UTHPortal.Common
             if (url != null && data != null)
             {
                 string path = "RestAPI";
-                string filename = url.Substring(RestAPI.baseUrl.Length).Replace('/', '-');
+                string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
 
                 await SaveData(path, filename, data).ConfigureAwait(false);
             }
@@ -99,7 +99,7 @@ namespace UTHPortal.Common
             if (url != null)
             {
                 string path = "RestAPI";
-                string filename = url.Substring(RestAPI.baseUrl.Length).Replace('/', '-');
+                string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
 
                 return await GetData(path, filename).ConfigureAwait(false);
             }
@@ -121,7 +121,23 @@ namespace UTHPortal.Common
             return currentFolder;
         }
 
-        /*** Settings ***/
+        private string SanitizeUrl(string url)
+        {
+            string bannedChars = "?=,/";
+            char replaceChar = '-';
+
+            StringWriter filename = new StringWriter();
+            foreach (char c in url) {
+                if (bannedChars.IndexOf(c) >= 0) {
+                    filename.Write(replaceChar);
+                }
+                else {
+                    filename.Write(c);
+                }
+            }
+            return filename.ToString();
+        }
+
         #region Settings
 
         /*public void SaveSettings(AppSettingsModel model)

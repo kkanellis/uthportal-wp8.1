@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
-using System;
 using UTHPortal.Common;
 using Windows.ApplicationModel.Email;
 
