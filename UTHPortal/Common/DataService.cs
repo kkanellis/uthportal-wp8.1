@@ -43,7 +43,7 @@ namespace UTHPortal.Common
                 var json = await GetData(url).ConfigureAwait(false);
 
                 var storageService = SimpleIoc.Default.GetInstance<IStorageService>();
-                await storageService.SaveAPIData(url, json);
+                await storageService.SaveJSON(url, json);
 
                 return ParseJson(json, modelType);
             }
@@ -55,7 +55,7 @@ namespace UTHPortal.Common
             List<KeyValuePair<string, string>> values = new List<KeyValuePair<string, string>>();
             values.Add(new KeyValuePair<string, string>("message", message));
 
-            return await PostData(RestAPI.Feedback, new FormUrlEncodedContent(values));
+            return await PostData(RestAPI.FeedbackUrl, new FormUrlEncodedContent(values));
         }
 
         private async Task<bool> PostData(string url, FormUrlEncodedContent content)

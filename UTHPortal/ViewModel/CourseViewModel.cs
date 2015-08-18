@@ -60,13 +60,13 @@ namespace UTHPortal.ViewModel
         protected override async void ExecutePageLoaded()
         {
             if (navigationService.StateExists(this.GetType())) {
-                /* TODO: Find a better place for those 2 */
+                // TODO: Find a better place for those 2 
                 RemoteDataAvailable = false;
                 LocalDataAvailable = false;
 
                 // Create the selected course url
                 Url = String.Format(
-                    RestAPI.InfDeptCourse,
+                    RestAPI.InfDeptCourseUrl,
                     (string)navigationService.GetAndRemoveState(this.GetType())
                 );
 

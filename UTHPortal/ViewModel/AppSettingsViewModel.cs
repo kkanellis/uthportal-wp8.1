@@ -2,11 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UTHPortal.Common;
 using UTHPortal.Models;
 using UTHPortal.Views;
@@ -43,7 +39,6 @@ namespace UTHPortal.ViewModel
             }
         }
 
-        private RelayCommand _selectCourses;
 
         /// <summary>
         /// Gets the SelectCourses.
@@ -64,5 +59,6 @@ namespace UTHPortal.ViewModel
                     }));
             }
         }
+        private RelayCommand _selectCourses;
     }
 }

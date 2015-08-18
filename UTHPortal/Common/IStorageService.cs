@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UTHPortal.Models;
+﻿using System.Threading.Tasks;
 
 namespace UTHPortal.Common
 {
     public interface IStorageService
     {
-        Task<string> GetAPIData(string url);
-        Task SaveAPIData(string url, string data);
+        Task<string> LoadJSON(string url);
+        Task SaveJSON(string url, string data);
 
-        object GetSettingsEntry(string name);
-        bool SaveSettingsEntry(string name, object value);
+        object GetSettingsEntry(string entryName);
+        bool SetSettingsEntry(string entryName, object value);
     }
 }

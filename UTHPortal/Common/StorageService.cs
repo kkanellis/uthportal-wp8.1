@@ -6,26 +6,21 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UTHPortal.Models;
 using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace UTHPortal.Common
 {
     public class StorageService : IStorageService
     {
-        private readonly uint bufferSize = 4096;
+        private const string restFolder = "RestAPI"; 
 
         private ILoggerService loggerService;
         private ApplicationDataContainer settingsContainer;
-        private Windows.Storage.Streams.Buffer buffer;
 
-        private char[] folderSeparators = { '/' };
-        private object _lock;
 
         public StorageService()
         {
-            _lock = new object();
-            buffer = new Windows.Storage.Streams.Buffer(bufferSize);
             settingsContainer = ApplicationData.Current.LocalSettings;
-
             loggerService = SimpleIoc.Default.GetInstance<ILoggerService>();
 
             /* Uncomment to clear the settings */
@@ -48,15 +43,36 @@ namespace UTHPortal.Common
             
         }
 
-        private async Task SaveData(string path, string filename, string data)
+        #region RestApi
+        public async Task SaveJSON(string url, string data)
         {
-            StorageFolder folder = await NavigateTo(path);
-            StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            /* RestAPI data are saved in files inside 'RestAPI' folder
+             * with the following format:
+             * eg:      http://sfi.ddns.net/uthportal/uth/announce/news
+             * file:    RestAPI/uth-rss-news
+             */
 
-            await FileIO.WriteTextAsync(file, data);
+            if (url != null && data != null)
+            {
+                string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
+                await SaveData(restFolder, filename, data).ConfigureAwait(false);
+            }
         }
 
-        public async Task SaveAPIData(string url, string data)
+        private async Task SaveData(string path, string filename, string data)
+        {
+            try {
+                StorageFolder folder = await NavigateToFolder(path);
+                StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+
+                await FileIO.WriteTextAsync(file, data, UnicodeEncoding.Utf8);
+            }
+            catch (Exception Exception) {
+                loggerService.Log("StorageService", "GetData", Exception.Message);
+            }
+        }
+
+        public async Task<string> LoadJSON(string url)
         {
             /* RestAPI data are saved in files inside 'RestAPI' folder
              * with the following format:
@@ -64,20 +80,19 @@ namespace UTHPortal.Common
              * file:    RestAPI/uth-rss-news
              */
 
-            if (url != null && data != null)
+            if (url != null)
             {
-                string path = "RestAPI";
                 string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
-
-                await SaveData(path, filename, data).ConfigureAwait(false);
+                return await LoadData(restFolder, filename).ConfigureAwait(false);
             }
+            return null;
         }
 
-        private async Task<string> GetData(string path, string filename)
+        private async Task<string> LoadData(string path, string filename)
         {
             try
             {
-                StorageFolder folder = await NavigateTo(path);
+                StorageFolder folder = await NavigateToFolder(path);
                 StorageFile file = await folder.GetFileAsync(filename);
                 
                 return (await FileIO.ReadTextAsync(file));
@@ -88,34 +103,17 @@ namespace UTHPortal.Common
             return null;
         }
 
-        public async Task<string> GetAPIData(string url)
-        {
-            /* RestAPI data are saved in files inside 'RestAPI' folder
-             * with the following format:
-             * eg:      http://sfi.ddns.net/uthportal/uth/rss/news
-             * file:    RestAPI/uth-rss-news
-             */
-
-            if (url != null)
-            {
-                string path = "RestAPI";
-                string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
-
-                return await GetData(path, filename).ConfigureAwait(false);
-            }
-            return null;
-        }
-
-        private async Task<StorageFolder> NavigateTo(string path)
+        private async Task<StorageFolder> NavigateToFolder(string path)
         {
             StorageFolder currentFolder = ApplicationData.Current.LocalFolder;
-            String[] folderPath = path.Split(folderSeparators,
-                                                StringSplitOptions.RemoveEmptyEntries);
+            string [] folderPath = path.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < folderPath.Length; i++)
             {
-                var nextFolder = await currentFolder.CreateFolderAsync(folderPath[i],
-                                                        CreationCollisionOption.OpenIfExists);
+                var nextFolder = await currentFolder.CreateFolderAsync(
+                                                        folderPath[i],
+                                                        CreationCollisionOption.OpenIfExists
+                                                        );
                 currentFolder = nextFolder;
             }
             return currentFolder;
@@ -138,6 +136,8 @@ namespace UTHPortal.Common
             return filename.ToString();
         }
 
+        #endregion
+
         #region Settings
 
         /*public void SaveSettings(AppSettingsModel model)
@@ -152,60 +152,31 @@ namespace UTHPortal.Common
             }
         }*/
 
-        public bool SaveSettingsEntry(string name, object value)
-        {
-            return AddOrUpdateValue(name, value);
-        }
-
-        /*public AppSettingsModel GetSettings()
-        {
-            AppSettingsModel model = new AppSettingsModel();
-
-            var properties = model.GetType().GetRuntimeProperties();
-            foreach (PropertyInfo pInfo in properties)
-            {
-                if (pInfo.PropertyType != typeof(PropertyChangedEventHandler) &&
-                    pInfo.CanWrite)
-                {
-                    Type propertyType = pInfo.PropertyType;
-
-                    var getMethod = this.GetType().GetTypeInfo().GetDeclaredMethod("GetValueOrDefault").MakeGenericMethod(propertyType);
-                    pInfo.SetValue(model, getMethod.Invoke(this, new object[] {pInfo.Name}));
-                }
-            }
-
-            return model;
-        }*/
-
-        public Object GetSettingsEntry(string name)
-        {
-            Type propertyType = typeof(AppSettingsModel).GetTypeInfo().GetDeclaredProperty(name).PropertyType;
-            var method = this.GetType().GetTypeInfo().GetDeclaredMethod("GetValueOrDefault").MakeGenericMethod(propertyType);
-            return method.Invoke(this, new object[] { name });
-        }
-
-        private bool AddOrUpdateValue(string key, object value)
+        public bool SetSettingsEntry(string key, object value)
         {
             bool valueChanged = false;
-            if (value != null)
-            {
-                value = (string)SerializeToString(value);
+            if (value != null) {
+                value = SerializeToString(value);
 
-                if (settingsContainer.Values.ContainsKey(key))
-                {
-                    if (settingsContainer.Values[key] != value)
-                    {
-                        settingsContainer.Values[key] = value;
+                if (settingsContainer.Values.ContainsKey(key)) {
+                    if (settingsContainer.Values [key] != value) {
+                        settingsContainer.Values [key] = value;
                         valueChanged = true;
                     }
                 }
-                else
-                {
+                else {
                     settingsContainer.Values.Add(key, value);
                     valueChanged = true;
                 }
             }
             return valueChanged;
+        }
+
+        public object GetSettingsEntry(string name)
+        {
+            Type propertyType = typeof(AppSettingsModel).GetTypeInfo().GetDeclaredProperty(name).PropertyType;
+            var method = this.GetType().GetTypeInfo().GetDeclaredMethod("GetValueOrDefault").MakeGenericMethod(propertyType);
+            return method.Invoke(this, new object[] { name });
         }
 
         private T GetValueOrDefault<T>(string key)

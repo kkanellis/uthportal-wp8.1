@@ -69,12 +69,12 @@ namespace UTHPortal.ViewModel
                             }
                             
                             Courses = new ObservableCollection<CourseModelChecked>();
-                            string json = await _storageService.GetAPIData(RestAPI.InfDeptCourses);
+                            string json = await _storageService.LoadJSON(RestAPI.InfDeptCoursesUrl);
 
                             if (json == null)
                             {
-                                await _dataService.RefreshAndSave(RestAPI.InfDeptCourses, typeof(CourseAllModel));
-                                json = await _storageService.GetAPIData(RestAPI.InfDeptCourses);
+                                await _dataService.RefreshAndSave(RestAPI.InfDeptCoursesUrl, typeof(CourseAllModel));
+                                json = await _storageService.LoadJSON(RestAPI.InfDeptCoursesUrl);
 
                             }
 

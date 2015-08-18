@@ -160,7 +160,7 @@ namespace UTHPortal.ViewModel
         /// </summary>
         protected virtual async Task RetrieveSavedView()
         {
-            string json = await storageService.GetAPIData(Url);
+            string json = await storageService.LoadJSON(Url);
 
             Data = (T)dataService.ParseJson(json, typeof(T));
 

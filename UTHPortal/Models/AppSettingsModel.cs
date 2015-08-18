@@ -1,10 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using UTHPortal.Common;
 
 namespace UTHPortal.Models
@@ -20,22 +15,6 @@ namespace UTHPortal.Models
 
         public bool FirstLaunched { get; set; }
 
-        private bool _autoRefresh;
-        public bool AutoRefresh
-        {
-            get {
-                _autoRefresh = (bool)_storageService.GetSettingsEntry("AutoRefresh");
-                return _autoRefresh;
-            }
-            set {
-                if (_storageService.SaveSettingsEntry("AutoRefresh", value))
-                {
-                    Set(() => AutoRefresh, ref _autoRefresh, value);
-                }
-            }
-        }
-
-        private List<CourseModel> _selectedCourses;
         public List<CourseModel> SelectedCourses
         {
             get {
@@ -43,20 +22,20 @@ namespace UTHPortal.Models
                 return _selectedCourses;
             }
             set {
-                if (_storageService.SaveSettingsEntry("SelectedCourses", value))
+                if (_storageService.SetSettingsEntry("SelectedCourses", value))
                 {
                     Set(() => SelectedCourses, ref _selectedCourses, value);
                 }
             }
         }
+        private List<CourseModel> _selectedCourses;
 
-        private String[] _departments = {"ΗΜΜΥ/ΤΜΗΥΔ (inf)"};
-        public String[] Departments
+        private string [] _departments = {"ΗΜΜΥ/ΤΜΗΥΔ (inf)"};
+        public string [] Departments
         {
             get { return _departments; }
         }
 
-        private int _selectedDepartment;
         public int SelectedDepartment
         {
             get {
@@ -64,12 +43,13 @@ namespace UTHPortal.Models
                 return _selectedDepartment;
             }
             set {
-                if (_storageService.SaveSettingsEntry("SelectedDepartment", value))
+                if (_storageService.SetSettingsEntry("SelectedDepartment", value))
                 {
                     Set(() => SelectedDepartment, ref _selectedDepartment, value);
                 }
            }
         }
+        private int _selectedDepartment;
     }
 
     public class CourseModelChecked : CourseModel

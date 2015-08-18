@@ -56,28 +56,28 @@ namespace UTHPortal.ViewModel
 
             UniversityButtonList.Add(new TileModel(){
                 Label = "Ανακοινώσεις",
-                Url = RestAPI.UniversityNews,
+                Url = RestAPI.UniversityNewsUrl,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel() {
                 Label = "Ειδήσεις",
-                Url = RestAPI.UniversityNews,
+                Url = RestAPI.UniversityNewsUrl,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.newspaper.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel() {
                 Label = "Εκδηλώσεις",
-                Url = RestAPI.UniversityEvents,
+                Url = RestAPI.UniversityEventsUrl,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.calendar.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel(){
                 Label = "Μενού Λέσχης",
-                Url = RestAPI.UniversityFoodmenu,
+                Url = RestAPI.UniversityFoodmenuUrl,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.food.silverware.cross.png", UriKind.Absolute)),
                 Click = ShowFoodmenu,
                 IsImplemented = true
@@ -91,14 +91,14 @@ namespace UTHPortal.ViewModel
             DeptButtonList = new ObservableCollection<TileModel>();
             DeptButtonList.Add(new TileModel(){
                 Label = "Ανακοινώσεις",
-                Url = RestAPI.InfDeptAnnouncementsGeneral,
+                Url = RestAPI.InfDeptAnnouncementsGeneralUrl,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             DeptButtonList.Add(new TileModel(){
                 Label = "Μαθήματα",
-                Url = RestAPI.InfDeptCourses,
+                Url = RestAPI.InfDeptCoursesUrl,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.book.hardcover.open.png", UriKind.Absolute)),
                 Click = CourseListClick,
                 IsImplemented = true
@@ -139,13 +139,13 @@ namespace UTHPortal.ViewModel
                                     "Η εφαρμόγή θα χρειαστεί πρόσβαση στο Internet, λόγω της πρώτης εκτέλεσης. \n\nΠαρακαλούμε βεβαιωθείτε πως υπάρχει ενεργή σύνδεση.", "Καλωσήρθατε!");
                                 
                                 // Try to get all courses //
-                                if (await dataService.RefreshAndSave(RestAPI.InfDeptCourses, typeof(CourseAllModel)) == null) {
+                                if (await dataService.RefreshAndSave(RestAPI.InfDeptCoursesUrl, typeof(CourseAllModel)) == null) {
                                     await viewService.ShowMessageDialog(
                                         "Δυστυχώς δεν ήταν δυνατή η επικοινωνία με τον server.\n\nΣυνδεθείτε στο Internet και προσπαθήστε αργότερα.", "Πρόβλημα σύνδεσης");
                                     App.Current.Exit();
                                 }
                                 else {
-                                    storageService.SaveSettingsEntry("FirstLaunched", true);
+                                    storageService.SetSettingsEntry("FirstLaunched", true);
                                     await viewService.ShowMessageDialog("Επιτυχής σύνδεση με server! Παρακαλούμε επιλέξτε τις ρυθμίσεις που θέλετε.\n\nΠεριμένουμε τις προτάσεις σας!\n-- Developer team", "Καλώσήρθατε!");
                                     navigationService.NavigateTo(typeof(AppSettingsView));
                                 }
