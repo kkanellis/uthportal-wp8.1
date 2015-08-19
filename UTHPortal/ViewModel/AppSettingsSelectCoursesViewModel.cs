@@ -2,55 +2,74 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UTHPortal.Common;
 using UTHPortal.Models;
 
 namespace UTHPortal.ViewModel
 {
+    public class Pair<T, U>
+    {
+        public T first { get; set; }
+        public U second { get; set; }
+
+        public Pair()
+        { }
+
+        public Pair(T first, U second)
+        {
+            this.first = first;
+            this.second = second;
+        }
+
+        public static Pair<T, U> Create(T first, U second)
+        {
+            return new Pair<T, U>(first, second);
+        }
+    }
+
     public class AppSettingsSelectCoursesViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
-        private IStorageService _storageService;
-        private IDataService _dataService;
+        private INavigationService navigationService;
+        private IStorageService storageService;
+        private IDataService dataService;
 
-        private ObservableCollection<CourseModelChecked> _courses;
-        public ObservableCollection<CourseModelChecked> Courses
+        public ObservableCollection<Pair<bool, CourseModel> > Courses
         {
             get { return _courses; }
             set { Set(() => Courses, ref _courses, value); }
         }
+        private ObservableCollection<Pair<bool, CourseModel> > _courses;
 
         public AppSettingsSelectCoursesViewModel()
         {
             if (IsInDesignMode)
             {
-                Courses = new ObservableCollection<CourseModelChecked>();
+                Courses = new ObservableCollection<Pair<bool, CourseModel>>();
                 for (int i = 0; i < 5; i++)
                 {
-                    CourseModelChecked course = new CourseModelChecked();
+                    var course = new CourseModel();
                     course.Info = new CourseInfoModel();
                     course.Info.Name = "Προγραμματισμός Ι";
                     course.Info.LinkSite = "http://inf-server.inf.uth.gr/courses/CE120";
-                    course.IsChecked = (i % 2 == 0) ? true : false;
 
-                    Courses.Add(course);
+                    Courses.Add(
+                        Pair<bool, CourseModel>.Create(
+                            i % 2 == 0 ? true :false, 
+                            course
+                        )
+                   );
                 }
             }
             else
             {
-                _navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
-                _storageService = SimpleIoc.Default.GetInstance<IStorageService>();
-                _dataService = SimpleIoc.Default.GetInstance<IDataService>();
+                navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
+                storageService = SimpleIoc.Default.GetInstance<IStorageService>();
+                dataService = SimpleIoc.Default.GetInstance<IDataService>();
             }
         }
 
-        private RelayCommand _pageLoaded;
 
         /// <summary>
         /// Gets the PageLoaded.
@@ -63,47 +82,30 @@ namespace UTHPortal.ViewModel
                     ?? (_pageLoaded = new RelayCommand(
                         async () =>
                         {
-                            List<CourseModel> selectedCourses = null;
-                            if(_navigationService.StateExists(this.GetType())){
-                                selectedCourses = (List<CourseModel>)_navigationService.GetAndRemoveState(this.GetType());
-                            }
-                            
-                            Courses = new ObservableCollection<CourseModelChecked>();
-                            string json = await _storageService.LoadJSON(RestAPI.InfDeptCoursesUrl);
+                            var selectedCourses = (List<CourseModel>)navigationService.GetAndRemoveState(this.GetType());
 
-                            if (json == null)
-                            {
-                                await _dataService.RefreshAndSave(RestAPI.InfDeptCoursesUrl, typeof(CourseAllModel));
-                                json = await _storageService.LoadJSON(RestAPI.InfDeptCoursesUrl);
+                            Courses = new ObservableCollection<Pair<bool, CourseModel>>();
+                            string json = await storageService.LoadJSON(RestAPI.InfDeptCoursesUrl);
 
-                            }
+                            var fullCourses = ((CourseAllModel)dataService.ParseJson(json, typeof(CourseAllModel))).Courses;
 
-                            var fullCourses = ((CourseAllModel)_dataService.ParseJson(json, typeof(CourseAllModel))).Courses;
-                            foreach (CourseModel course in fullCourses)
-                            {
-                                CourseModelChecked entry = new CourseModelChecked();
-                                entry.Code = course.Code;
-                                entry.Info = course.Info;
-                                entry.IsChecked = false;
+                            if (selectedCourses != null) {
+                                foreach (CourseModel course in fullCourses) {
+                                    bool isSelected = selectedCourses.Find(sCourse => sCourse.Code == course.Code) != null;
 
-                                if (selectedCourses != null)
-                                {
-                                    var foundCourse = selectedCourses.Find(
-                                        selectedCourse => selectedCourse.Info.Name.Equals(entry.Info.Name));
-                                    
-                                    if (foundCourse != null)
-                                    {
-                                        entry.IsChecked = true;
-                                    }
+                                    Courses.Add(Pair<bool, CourseModel>.Create(isSelected, course));
                                 }
-
-                                Courses.Add(entry);
+                            }
+                            else {
+                                foreach(CourseModel course in fullCourses) {
+                                    Courses.Add(Pair<bool, CourseModel>.Create(false, course));
+                                }
                             }
                         }));
             }
         }
+        private RelayCommand _pageLoaded;
 
-        private RelayCommand _saveCommand;
 
         /// <summary>
         /// Gets the SaveCommand.
@@ -116,24 +118,20 @@ namespace UTHPortal.ViewModel
                     ?? (_saveCommand = new RelayCommand(
                                           () =>
                                           {
-                                              List<CourseModel> selectedCourses = new List<CourseModel>();
-                                              foreach (CourseModelChecked course in Courses)
+                                              var selectedCourses = new List<CourseModel>();
+                                              foreach (var course in Courses)
                                               {
-                                                  if (course.IsChecked)
-                                                  {
-                                                      CourseModel baseCourse = new CourseModel();
-                                                      baseCourse.Info = course.Info;
-                                                      baseCourse.Code = course.Code;
-
-                                                      selectedCourses.Add(baseCourse);
+                                                  if (course.first) {
+                                                      selectedCourses.Add(course.second);
                                                   }
                                               }
 
-                                              Messenger.Default.Send<List<CourseModel>>(selectedCourses, "SelectCourses");
-                                              _navigationService.GoBack();
+                                              Messenger.Default.Send(selectedCourses, "SelectCourses");
+                                              navigationService.GoBack();
                                           }));
             }
         }
+        private RelayCommand _saveCommand;
 
     }
 }

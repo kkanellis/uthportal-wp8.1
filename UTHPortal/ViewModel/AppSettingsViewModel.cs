@@ -15,12 +15,12 @@ namespace UTHPortal.ViewModel
         private IStorageService _storageService;
         private IDataService _dataService;
 
-        private AppSettingsModel _data;
-        public AppSettingsModel Data
+        public AppSettingsModel Settings
         {
-            get { return _data; }
-            set { Set(() => Data, ref _data, value); }
+            get { return _settings; }
+            set { Set(() => Settings, ref _settings, value); }
         }
+        private AppSettingsModel _settings;
 
         public AppSettingsViewModel()
         {
@@ -30,11 +30,12 @@ namespace UTHPortal.ViewModel
                 _storageService = SimpleIoc.Default.GetInstance<IStorageService>();
                 _dataService = SimpleIoc.Default.GetInstance<IDataService>();
 
-                Data = new AppSettingsModel(_storageService);
+                Settings = new AppSettingsModel();
+
                 Messenger.Default.Register<List<CourseModel>>(this, "SelectCourses",
                 selectedCourses =>
                 {
-                    Data.SelectedCourses = selectedCourses;
+                    Settings.SelectedCourses = selectedCourses;
                 });
             }
         }
@@ -54,7 +55,7 @@ namespace UTHPortal.ViewModel
                         _navigationService.NavigateTo(
                             typeof(AppSettingsSelectCoursesView),
                             typeof(AppSettingsSelectCoursesViewModel),
-                            Data.SelectedCourses
+                            Settings.SelectedCourses
                         );     
                     }));
             }
