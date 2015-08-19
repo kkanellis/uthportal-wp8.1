@@ -16,30 +16,36 @@ namespace UTHPortal.Common
 
         public void RegisterUrl(string url)
         {
-            var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
-            var regEventName = getEventName(url);
-
-            if ( !activePushEvents.Exists( activeEvent => activeEvent.Name == regEventName)) {
+            PushEvent pushEvent;
+            if ((pushEvent = IsRegistered(url)) == null) {
                 // TODO: Make necessary connections to server in order
                 //       ensure that the events is registered to client
 
-                activePushEvents.Add(new PushEvent(url, regEventName));
+                var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
+                activePushEvents.Add(pushEvent);
                 storageService.SetSettingsEntry("ActivePushEvents", activePushEvents);
             }
         }
 
         public void UnregisterUrl(string url)
         {
-            var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
-            var regEventName = getEventName(url);
-
-            if ( activePushEvents.Exists( activeEvent => activeEvent.Name == regEventName)) {
+            PushEvent pushEvent;
+            if ( (pushEvent = IsRegistered(url)) != null) {
                 // TODO: Make necessary connections to server in order
                 //       ensure that the events is registered to client
 
-                activePushEvents.Remove(new PushEvent(url, regEventName));
+                var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
+                activePushEvents.Remove(pushEvent);
                 storageService.SetSettingsEntry("ActivePushEvents", activePushEvents);
             }
+        }
+
+        public PushEvent IsRegistered(string url)
+        {
+            var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
+            url = getEventName(url);
+
+            return activePushEvents.Find(activeEvent => activeEvent.Url == url);
         }
 
         private string getEventName(string url)
