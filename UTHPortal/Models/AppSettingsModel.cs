@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
 using System.Collections.Generic;
 using UTHPortal.Common;
 
@@ -6,23 +7,37 @@ namespace UTHPortal.Models
 {
     public class AppSettingsModel : ObservableObject
     {
-        private IStorageService _storageService;
+        private IStorageService storageService;
 
-        public AppSettingsModel(IStorageService storageService)
+        public AppSettingsModel()
         {
-            _storageService = storageService;
+            storageService = SimpleIoc.Default.GetInstance<IStorageService>();
         }
 
         public bool FirstLaunched { get; set; }
 
+        public List<PushEvent> ActivePushEvents
+        {
+            get
+            {
+                return (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
+            }
+            set
+            {
+                if (storageService.SetSettingsEntry("ActivePushEvents", value)) {
+                    Set(() => ActivePushEvents, ref _activePushEvents, value);
+                }
+            }
+        }
+        private List<PushEvent> _activePushEvents;
+
         public List<CourseModel> SelectedCourses
         {
             get {
-                _selectedCourses = (List<CourseModel>)_storageService.GetSettingsEntry("SelectedCourses");
-                return _selectedCourses;
+                return (List<CourseModel>)storageService.GetSettingsEntry("SelectedCourses");
             }
             set {
-                if (_storageService.SetSettingsEntry("SelectedCourses", value))
+                if (storageService.SetSettingsEntry("SelectedCourses", value))
                 {
                     Set(() => SelectedCourses, ref _selectedCourses, value);
                 }
@@ -39,22 +54,16 @@ namespace UTHPortal.Models
         public int SelectedDepartment
         {
             get {
-                _selectedDepartment = (int)_storageService.GetSettingsEntry("SelectedDepartment");
-                return _selectedDepartment;
+                return (int)storageService.GetSettingsEntry("SelectedDepartment");
             }
             set {
-                if (_storageService.SetSettingsEntry("SelectedDepartment", value))
+                if (storageService.SetSettingsEntry("SelectedDepartment", value))
                 {
                     Set(() => SelectedDepartment, ref _selectedDepartment, value);
                 }
            }
         }
         private int _selectedDepartment;
-    }
-
-    public class CourseModelChecked : CourseModel
-    {
-        public bool IsChecked { get; set; }
     }
 
 }

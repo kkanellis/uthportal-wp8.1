@@ -99,10 +99,12 @@
     <Compile Include="Common\Converters\RequiredToStringConverter.cs" />
     <Compile Include="Common\ILoggerService.cs" />
     <Compile Include="Common\INavigationService.cs" />
+    <Compile Include="Common\IPushService.cs" />
     <Compile Include="Common\IStorageService.cs" />
     <Compile Include="Common\IViewService.cs" />
     <Compile Include="Common\LoggerService.cs" />
     <Compile Include="Common\NavigationService.cs" />
+    <Compile Include="Common\PushService.cs" />
     <Compile Include="Common\RestAPI.cs" />
     <Compile Include="Common\StorageService.cs" />
     <Compile Include="Common\Controls\ImageButton.xaml.cs">
@@ -116,6 +118,7 @@
     <Compile Include="Models\FoodmenuModel.cs" />
     <Compile Include="Models\InfAnnounceModel.cs" />
     <Compile Include="Models\AppSettingsModel.cs" />
+    <Compile Include="Models\PushEvent.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnnounceListDetailsViewModel.cs" />
     <Compile Include="ViewModel\AnnounceListViewModel.cs" />
