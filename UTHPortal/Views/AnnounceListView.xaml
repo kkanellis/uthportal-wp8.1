@@ -83,10 +83,8 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid x:Name="LayoutRoot">
-        <Grid.Background>
-            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}"/>
-        </Grid.Background>
+    <Grid x:Name="LayoutRoot"
+          Background="{StaticResource AppBackgroundBrush}">
 
         <Grid.ChildrenTransitions>
             <TransitionCollection>

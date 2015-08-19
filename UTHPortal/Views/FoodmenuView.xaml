@@ -40,11 +40,8 @@
     <Pivot Title="UTHPortal"
            ItemsSource="{Binding Data.Days}"
            SelectedIndex="{Binding SelectedDay}"
-           BorderBrush="Black"
+           Background="{StaticResource AppBackgroundBrush}"
            >
-        <Pivot.Background>
-            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-        </Pivot.Background>
     <Pivot.HeaderTemplate>
             <DataTemplate>
                 <TextBlock Text="{Binding DayName, Converter={StaticResource DayConverter}}"

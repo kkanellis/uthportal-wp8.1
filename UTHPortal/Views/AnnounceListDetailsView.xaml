@@ -28,10 +28,8 @@
 	</Interactivity:Interaction.Behaviors>
 
     <Grid x:Name="LayoutRoot"
+          Background="{StaticResource AppBackgroundBrush}"
           >
-        <Grid.Background>
-            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-        </Grid.Background>
         
 		<Grid.ChildrenTransitions>
 			<TransitionCollection>

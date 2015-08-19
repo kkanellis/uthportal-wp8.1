@@ -98,10 +98,8 @@
     </Page.BottomAppBar>
 
     <Grid x:Name="LayoutRoot"
+          Background="{StaticResource AppBackgroundBrush}"
           >
-        <Grid.Background>
-            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-        </Grid.Background>
         
         <Grid.ChildrenTransitions>
             <TransitionCollection>
@@ -166,10 +164,8 @@
                                                     <TextBlock Style="{StaticResource TitleTextBlockStyle}"
                                                            TextAlignment="Center"
                                                            Margin="0,10,0,15"
+                                                               Foreground="{StaticResource AppBackgroundBrush}"
                                                            >
-                                                        <TextBlock.Foreground>
-                                                            <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-                                                        </TextBlock.Foreground>
                                                         <Run Text="Εξάμηνο" />
                                                         <Run Text="{Binding Key}" /><Run Text="o"/>
                                                     </TextBlock>
@@ -193,9 +189,6 @@
                         <ListView ScrollViewer.IsHorizontalScrollChainingEnabled="False"
                                   ItemsSource="{Binding Source={StaticResource cvsCourses}, Path=CollectionGroups}"
                                   >
-                            <ListView.Background>
-                                <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-                            </ListView.Background>
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -209,10 +202,8 @@
                                             Padding="5">
                                         <TextBlock Style="{ThemeResource ListViewItemTextBlockStyle}"
                                                    TextAlignment="Center"
+                                                   Foreground="{StaticResource AppBackgroundBrush}"
                                                    >
-                                            <TextBlock.Foreground>
-                                                <SolidColorBrush Color="{StaticResource AppBackgroundBrush}" />
-                                            </TextBlock.Foreground>
                                                 <Run Text="Εξάμηνο" />
                                                 <Run Text="{Binding Group.Key}"/><Run Text="o" />
                                         </TextBlock>

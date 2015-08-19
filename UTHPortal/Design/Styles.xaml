@@ -6,6 +6,8 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:UTHPortal"
     >
-    <Color x:Key="AppBackgroundBrush">#7A1738</Color>
+    <Color x:Key="AppBackgroundColor">#7A1738</Color>
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
     
+
 </ResourceDictionary>
