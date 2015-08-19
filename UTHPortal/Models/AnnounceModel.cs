@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace UTHPortal.Models
 {
-    public class AnnounceModelBase : ObservableObject
+    public class AnnounceModel : ObservableObject
     {
         private ObservableCollection<Announce> _Entries;
 
@@ -18,7 +18,7 @@ namespace UTHPortal.Models
         }
 
         [JsonProperty("title")]
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         [JsonProperty("first_updated")]
         public DateTime FirstUpdated { get; set; }
@@ -27,28 +27,49 @@ namespace UTHPortal.Models
         public DateTime LastUpdated { get; set; }
 
         [JsonProperty("link")]
-        public String Link { get; set; }
+        public string Link { get; set; }
        
     }
 
     public class Announce
     {
         [JsonProperty("title")]
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         [JsonProperty("date")]
         public DateTime Date { get; set; }
 
         [JsonProperty("plaintext")]
-        public String Plaintext { get; set; }
+        public string Plaintext { get; set; }
 
         [JsonProperty("html")]
-        public String Html { get; set; }
+        public string Html { get; set; }
 
         [JsonProperty("link")]
-        public String Link { get; set; }
+        public string Link { get; set; }
 
         [JsonProperty("has_time")]
         public bool HasTime { get; set; }
     }
+
+    public class AnnounceEx : Announce
+    {
+        public AnnounceEx()
+        { }
+
+        public AnnounceEx(Announce announce)
+        {
+            // TODO: Find a better way for this!
+            Date = announce.Date;
+            HasTime = announce.HasTime;
+            Html = announce.Html;
+            Link = announce.Link;
+            Plaintext = announce.Plaintext;
+            Title = announce.Title;
+        }
+
+        // Can be site, eclass or email
+        public string Source { get; set; }
+    }
+
 }

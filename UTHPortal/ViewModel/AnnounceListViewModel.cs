@@ -6,13 +6,13 @@ using UTHPortal.Models;
 
 namespace UTHPortal.ViewModel
 {
-    public class AnnounceListViewModel : UpdatableViewModel<AnnounceModelBase>
+    public class AnnounceListViewModel : UpdatableViewModel<AnnounceModel>
     {
         public AnnounceListViewModel()
         {
             if (IsInDesignMode)
             {
-                Data = new AnnounceModelBase();
+                Data = new AnnounceModel();
                 Data.Entries = new ObservableCollection<Announce>();
                 Data.Title = "Νεα Πανεπιστημίου Θεσσαλίας";
                 for (int i = 0; i < 5; i++)

@@ -145,24 +145,5 @@ namespace UTHPortal.ViewModel
 
     }
     
-    public class AnnounceEx : Announce
-    {
-        public AnnounceEx()
-        { }
-
-        public AnnounceEx(Announce announce)
-        {
-            // TODO: Find a better way for this!
-            Date = announce.Date;
-            HasTime = announce.HasTime;
-            Html = announce.Html;
-            Link = announce.Link;
-            Plaintext = announce.Plaintext;
-            Title = announce.Title;
-        }
-
-        // Can be site, eclass or email
-        public string Source
-        { get; set; }
-    }
+    
 }
