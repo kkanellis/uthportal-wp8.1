@@ -14,17 +14,17 @@ namespace UTHPortal.Common
 
         public void Log(string message)
         {
-            SaveLog(String.Empty, String.Empty, String.Empty, message);
+            SaveLog(string.Empty, string.Empty, string.Empty, message);
         }
 
         public void Log(string title, string message)
         {
-            SaveLog(title, String.Empty, String.Empty, message);
+            SaveLog(title, string.Empty, string.Empty, message);
         }
 
         public void Log(string _class, string method, string message)
         {
-            SaveLog(String.Empty, _class, method, message);
+            SaveLog(string.Empty, _class, method, message);
         }
 
         /*private async Task SaveLogSync(string title, string _class, string method, string message)

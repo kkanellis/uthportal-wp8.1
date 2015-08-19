@@ -112,7 +112,7 @@
     </Compile>
     <Compile Include="Common\ViewService.cs" />
     <Compile Include="Common\WebViewHelper.cs" />
-    <Compile Include="Models\AnnounceModelBase.cs" />
+    <Compile Include="Models\AnnounceModel.cs" />
     <Compile Include="Models\CourseAnnounceModel.cs" />
     <Compile Include="Models\CourseModel.cs" />
     <Compile Include="Models\FoodmenuModel.cs" />

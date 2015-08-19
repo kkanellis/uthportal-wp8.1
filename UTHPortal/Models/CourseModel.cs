@@ -1,11 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace UTHPortal.Models
@@ -28,6 +23,9 @@ namespace UTHPortal.Models
     {
         [JsonProperty("children")]
         public ObservableCollection<CourseModel> Courses { get; set; }
+
+        [JsonProperty("collection")]
+        public string Collection { get; set; }
     }
 
     public class CourseInfoModel : ObservableObject
@@ -51,7 +49,7 @@ namespace UTHPortal.Models
         public string LinkEclass { get; set; }
 
         [JsonProperty("semester")]
-        public Int32 Semester { get; set; }
+        public int Semester { get; set; }
 
         [JsonProperty("required")]
         public bool Required { get; set; }
