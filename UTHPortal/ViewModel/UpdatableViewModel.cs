@@ -57,20 +57,20 @@ namespace UTHPortal.ViewModel
         protected bool _localDataAvailable;
 
         /// <summary>
-        /// String representing the url used for fetching.
+        /// Info about the current RestAPI item
         /// </summary>
-        public string Url
+        public RestAPIItem Info
         {
-            get { return _url; }
+            get { return _info; }
             set
             {
-                _url = value;
+                _info = value;
                 DispatcherHelper.CheckBeginInvokeOnUI(() => {
                     Data = default(T);
                 });
             }
         }
-        protected string _url;
+        protected RestAPIItem _info;
 
         /// <summary>
         /// Initializes the viewmodel by locating all services needed
@@ -101,7 +101,7 @@ namespace UTHPortal.ViewModel
         protected virtual async void ExecutePageLoaded()
         {
             if (navigationService.StateExists(this.GetType())) {
-                Url = (string)navigationService.GetAndRemoveState(this.GetType());
+                Info = (RestAPIItem)navigationService.GetAndRemoveState(this.GetType());
 
                 await RetrieveSavedView();
 
@@ -134,7 +134,7 @@ namespace UTHPortal.ViewModel
                 await viewService.ShowStatusBar("Ενημέρωση...", null);
                 
                 var newData = await dataService.RefreshAndSave(
-                    Url,
+                    Info,
                     typeof(T)
                 );
 
@@ -160,7 +160,7 @@ namespace UTHPortal.ViewModel
         /// </summary>
         protected virtual async Task RetrieveSavedView()
         {
-            string json = await storageService.LoadJSON(Url);
+            string json = await storageService.LoadJSON(Info);
 
             Data = (T)dataService.ParseJson(json, typeof(T));
 

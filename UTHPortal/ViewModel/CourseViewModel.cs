@@ -64,11 +64,10 @@ namespace UTHPortal.ViewModel
                 RemoteDataAvailable = false;
                 LocalDataAvailable = false;
 
-                // Create the selected course url
-                Url = String.Format(
-                    RestAPI.InfDeptCourseUrl,
-                    (string)navigationService.GetAndRemoveState(this.GetType())
-                );
+
+                // Create the selected course info
+                string courseCode = (string)navigationService.GetAndRemoveState(this.GetType());
+                Info = Info.Specialize(courseCode);
 
                 // Check if we have a saved view for the current course
                 AllAnnouncements = new List<AnnounceEx>();
@@ -107,8 +106,9 @@ namespace UTHPortal.ViewModel
 
                 // Sort the collection
                 var sortedAnnouncements = AllAnnouncements.OrderBy(announce => announce.Date)
-                                                   .Reverse()
-                                                   .ToList();
+                                                          .Reverse()
+                                                          .ToList();
+
                 DispatcherHelper.CheckBeginInvokeOnUI(() => {
                     AllAnnouncements = sortedAnnouncements;
                 });

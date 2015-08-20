@@ -49,18 +49,6 @@ namespace UTHPortal.ViewModel
             }
         }
 
-        protected override async void ExecutePageLoaded()
-        {
-            if (navigationService.StateExists(this.GetType())) {
-                Url = (string)navigationService.GetAndRemoveState(this.GetType());
-
-                await RetrieveSavedView();
-                await DispatcherHelper.RunAsync(() => {
-                    RefreshCommand.Execute(null);
-                });
-           }
-        }
-
         protected override async Task ValidateView()
         {
             bool LocalDataValid = LocalDataAvailable && !IsOldMenuSaved();

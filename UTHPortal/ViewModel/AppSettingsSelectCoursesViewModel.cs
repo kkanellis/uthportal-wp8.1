@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using UTHPortal.Common;
 using UTHPortal.Models;
 
@@ -85,7 +86,11 @@ namespace UTHPortal.ViewModel
                             var selectedCourses = (List<CourseModel>)navigationService.GetAndRemoveState(this.GetType());
 
                             Courses = new ObservableCollection<Pair<bool, CourseModel>>();
-                            string json = await storageService.LoadJSON(RestAPI.InfDeptCoursesUrl);
+
+                            var coursesRestItem = RestAPI.GetItem("inf.courses.");
+                            Debug.Assert(coursesRestItem != null, "Can't find saved courses list");
+
+                            string json = await storageService.LoadJSON(coursesRestItem);
 
                             var fullCourses = ((CourseAllModel)dataService.ParseJson(json, typeof(CourseAllModel))).Courses;
 
