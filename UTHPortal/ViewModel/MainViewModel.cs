@@ -1,16 +1,14 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UTHPortal.Common;
 using UTHPortal.Models;
 using UTHPortal.Views;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI;
 using System;
 using Windows.System;
+using System.Collections.Generic;
 
 namespace UTHPortal.ViewModel
 {
@@ -33,19 +31,21 @@ namespace UTHPortal.ViewModel
         private IViewService viewService;
         private IDataService dataService;
 
-        private ObservableCollection<TileModel> _universityButtonList;
+
         public ObservableCollection<TileModel> UniversityButtonList
         {
             get { return _universityButtonList; }
             set { Set(() => UniversityButtonList, ref _universityButtonList, value); }
         }
+        private ObservableCollection<TileModel> _universityButtonList;
 
-        private ObservableCollection<TileModel> _deptButtonList;
+
         public ObservableCollection<TileModel> DeptButtonList
         {
             get { return _deptButtonList; }
             set { Set(() => DeptButtonList, ref _deptButtonList, value); }
         }
+        private ObservableCollection<TileModel> _deptButtonList;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -54,30 +54,30 @@ namespace UTHPortal.ViewModel
         {
             UniversityButtonList = new ObservableCollection<TileModel>();
 
-            UniversityButtonList.Add(new TileModel(){
+            UniversityButtonList.Add(new TileModel() {
                 Label = "Ανακοινώσεις",
-                Url = RestAPI.UniversityNewsUrl,
+                Info = RestAPI.GetItem("uth.announce.news"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel() {
                 Label = "Ειδήσεις",
-                Url = RestAPI.UniversityNewsUrl,
+                Info = RestAPI.GetItem("uth.announce.news"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.newspaper.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel() {
                 Label = "Εκδηλώσεις",
-                Url = RestAPI.UniversityEventsUrl,
+                Info = RestAPI.GetItem("uth.announce.events"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.calendar.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             UniversityButtonList.Add(new TileModel(){
                 Label = "Μενού Λέσχης",
-                Url = RestAPI.UniversityFoodmenuUrl,
+                Info = RestAPI.GetItem("uth.foodmenu"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.food.silverware.cross.png", UriKind.Absolute)),
                 Click = ShowFoodmenu,
                 IsImplemented = true
@@ -91,19 +91,19 @@ namespace UTHPortal.ViewModel
             DeptButtonList = new ObservableCollection<TileModel>();
             DeptButtonList.Add(new TileModel(){
                 Label = "Ανακοινώσεις",
-                Url = RestAPI.InfDeptAnnouncementsGeneralUrl,
+                Info = RestAPI.GetItem("inf.announce.general"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
             DeptButtonList.Add(new TileModel(){
                 Label = "Μαθήματα",
-                Url = RestAPI.InfDeptCoursesUrl,
+                Info = RestAPI.GetItem("inf.courses"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.book.hardcover.open.png", UriKind.Absolute)),
                 Click = CourseListClick,
                 IsImplemented = true
             });
-            DeptButtonList.Add(new TileModel(){
+            /*DeptButtonList.Add(new TileModel(){
                 Label = "Email",
                 Url = "https://webmail.uth.gr/login.php",
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.email.hardedge.png", UriKind.Absolute)),
@@ -114,7 +114,7 @@ namespace UTHPortal.ViewModel
                 Label = "Eclass",
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.calendar.png", UriKind.Absolute)),
                 IsImplemented = false
-            });
+            });*/
 
             if (!IsInDesignMode)
             {
@@ -137,9 +137,10 @@ namespace UTHPortal.ViewModel
                             if (firstLaunched == false) {
                                 await viewService.ShowMessageDialog(
                                     "Η εφαρμόγή θα χρειαστεί πρόσβαση στο Internet, λόγω της πρώτης εκτέλεσης. \n\nΠαρακαλούμε βεβαιωθείτε πως υπάρχει ενεργή σύνδεση.", "Καλωσήρθατε!");
-                                
+
                                 // Try to get all courses //
-                                if (await dataService.RefreshAndSave(RestAPI.InfDeptCoursesUrl, typeof(CourseAllModel)) == null) {
+                                var restItem = RestAPI.GetItem("inf.courses");
+                                if (await dataService.RefreshAndSave(restItem, typeof(CourseAllModel)) == null) {
                                     await viewService.ShowMessageDialog(
                                         "Δυστυχώς δεν ήταν δυνατή η επικοινωνία με τον server.\n\nΣυνδεθείτε στο Internet και προσπαθήστε αργότερα.", "Πρόβλημα σύνδεσης");
                                     App.Current.Exit();
@@ -157,13 +158,12 @@ namespace UTHPortal.ViewModel
 
 
 
-        private RelayCommand<string> _universityAnnounceClick;
-        public RelayCommand<string> UniversityAnnounceClick
+        public RelayCommand<RestAPIItem> UniversityAnnounceClick
         {
             get
             {
                 return _universityAnnounceClick
-                    ?? (_universityAnnounceClick = new RelayCommand<string>(
+                    ?? (_universityAnnounceClick = new RelayCommand<RestAPIItem>(
                         url =>
                         {
                             navigationService.NavigateTo(
@@ -173,25 +173,25 @@ namespace UTHPortal.ViewModel
                         }));
             }
         }
+        private RelayCommand<RestAPIItem> _universityAnnounceClick;
 
-        private RelayCommand<string> _courseListClick;
-        public RelayCommand<string> CourseListClick
+        public RelayCommand<RestAPIItem> CourseListClick
         {
             get
             {
                 return _courseListClick
-                    ?? (_courseListClick = new RelayCommand<string>(
-                        url =>
+                    ?? (_courseListClick = new RelayCommand<RestAPIItem>(
+                        info =>
                         {
                             navigationService.NavigateTo(
                                 typeof(CourseListView),
                                 typeof(CourseListViewModel),
-                                url);
+                                info);
                         }));
             }
         }
+        private RelayCommand<RestAPIItem> _courseListClick;
 
-        private RelayCommand<string> _IELauncher;
 
         /// <summary>
         /// Gets the IELauncher.
@@ -207,8 +207,8 @@ namespace UTHPortal.ViewModel
                         }));
             }
         }
+        private RelayCommand<string> _IELauncher;
 
-        private RelayCommand _showSettings;
 
         /// <summary>
         /// Gets the ShowSettings.
@@ -227,8 +227,8 @@ namespace UTHPortal.ViewModel
                         }));
             }
         }
+        private RelayCommand _showSettings;
 
-        private RelayCommand _showAboutViewCommand;
 
         /// <summary>
         /// Gets the ShowAboutViewCommand.
@@ -245,18 +245,18 @@ namespace UTHPortal.ViewModel
                                           }));
             }
         }
+        private RelayCommand _showAboutViewCommand;
 
-        private RelayCommand<string> _showFoodmenu;
 
         /// <summary>
         /// Gets the ShowFoodmenu.
         /// </summary>
-        public RelayCommand<string> ShowFoodmenu
+        public RelayCommand<RestAPIItem> ShowFoodmenu
         {
             get
             {
                 return _showFoodmenu
-                    ?? (_showFoodmenu = new RelayCommand<string>(
+                    ?? (_showFoodmenu = new RelayCommand<RestAPIItem>(
                                            url => {
                                               navigationService.NavigateTo(
                                                   typeof(FoodmenuView),
@@ -265,6 +265,7 @@ namespace UTHPortal.ViewModel
                                           }));
             }
         }
+        private RelayCommand<RestAPIItem> _showFoodmenu;
 
 
     }
