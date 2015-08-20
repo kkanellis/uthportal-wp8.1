@@ -57,41 +57,30 @@ namespace UTHPortal.ViewModel
             }
         }
 
-        protected override async void ExecutePageLoaded()
+
+        protected override void ExecutePageLoaded()
         {
+            // We update AllAnnouncements only when going forward
+            // If we hit the Back-Button, AllAnnouncements should not be changed
             if (navigationService.StateExists(this.GetType())) {
-                // TODO: Find a better place for those 2 
-                RemoteDataAvailable = false;
-                LocalDataAvailable = false;
-
-
-                // Create the selected course info
-                string courseCode = (string)navigationService.GetAndRemoveState(this.GetType());
-                Info = Info.Specialize(courseCode);
-
-                // Check if we have a saved view for the current course
                 AllAnnouncements = new List<AnnounceEx>();
-                await RetrieveSavedView();
-
-                // Perform the refresh
-                await DispatcherHelper.RunAsync(() => {
-                    RefreshCommand.Execute(null);
-                });
             }
+
+            base.ExecutePageLoaded();
         }
 
         protected override async Task Postproccess()
         {
-            AllAnnouncements = new List<AnnounceEx>();
-
             // Populate the AllAnnouncements collection
             await Task.Run(() => {
+                var sortedAnnouncements = new List<AnnounceEx>();
+
                 if (Data.Announcements.Site != null) {
                     foreach (Announce announce in Data.Announcements.Site) {
                         var newAnnounce = new AnnounceEx(announce);
                         newAnnounce.Source = "ιστοσελίδα";
 
-                        AllAnnouncements.Add(newAnnounce);
+                        sortedAnnouncements.Add(newAnnounce);
                     }
                 }
 
@@ -100,14 +89,14 @@ namespace UTHPortal.ViewModel
                         var newAnnounce = new AnnounceEx(announce);
                         newAnnounce.Source = "eclass";
 
-                        AllAnnouncements.Add(newAnnounce);
+                        sortedAnnouncements.Add(newAnnounce);
                     }
                 }
 
                 // Sort the collection
-                var sortedAnnouncements = AllAnnouncements.OrderBy(announce => announce.Date)
-                                                          .Reverse()
-                                                          .ToList();
+                sortedAnnouncements = sortedAnnouncements.OrderBy(announce => announce.Date)
+                                                         .Reverse()
+                                                         .ToList();
 
                 DispatcherHelper.CheckBeginInvokeOnUI(() => {
                     AllAnnouncements = sortedAnnouncements;

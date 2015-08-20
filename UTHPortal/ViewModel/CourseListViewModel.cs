@@ -6,6 +6,7 @@ using GalaSoft.MvvmLight.Command;
 using UTHPortal.Models;
 using UTHPortal.Views;
 using GalaSoft.MvvmLight.Threading;
+using UTHPortal.Common;
 
 namespace UTHPortal.ViewModel
 {
@@ -62,19 +63,19 @@ namespace UTHPortal.ViewModel
                                               navigationService.NavigateTo(
                                                   typeof(CourseView),
                                                   typeof(CourseViewModel),
-                                                  course.Code);
+                                                  RestAPI.GetItem("inf.courses.").Specialize(course.Code));
                                           }));
             }
         }
 
-        protected override async Task RetrieveSavedView()
+        protected override void ExecutePageLoaded()
         {
-            await base.RetrieveSavedView();
-
             // Get the user-defined courses
             SelectedCourses = (List<CourseModel>)storageService.GetSettingsEntry("SelectedCourses");
-        }
 
+            base.ExecutePageLoaded();
+        }
+        
         protected override async Task Postproccess()
         {
             await Task.Run(() => {
