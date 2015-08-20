@@ -10,10 +10,10 @@ namespace UTHPortal.Common
 {
     public interface IDataService
     {
-        Task<Object> Refresh(String url, Type modelType);
-        Task<Object> RefreshAndSave(String url, Type modelType);
-        Object ParseJson(String json, Type modelType);
+        Task<object> Refresh(RestAPIItem item, Type modelType);
+        Task<object> RefreshAndSave(RestAPIItem item, Type modelType);
+        void CancelAllRequests();
 
-        Task<bool> SendFeedback(string message);
+        object ParseJson(string json, Type modelType);
     }
 }

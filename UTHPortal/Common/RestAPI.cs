@@ -56,6 +56,7 @@ namespace UTHPortal.Common
         public string RequestUrl { get; set; }
         public string RequestParams { get; set; }
         public string Collection { get; set; }
+        public string Filename { get; set; }
 
         public Type ModelType;
         public string[] DisplayParams { get; set; }
@@ -70,7 +71,8 @@ namespace UTHPortal.Common
             this.DisplayFormat = DisplayFormat;
             this.DisplayParams = displayParams;
 
-            this.Collection = String.Format(Url, string.Empty).Replace('/', '.');
+            this.Collection = string.Format(Url, string.Empty).Replace('/', '.');
+            this.Filename = Collection.Replace('.', '-');
         }
 
         public RestAPIItem(Type modelType, string url, string requestParams, string displayFormat) :

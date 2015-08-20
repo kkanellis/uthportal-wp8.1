@@ -4,8 +4,8 @@ namespace UTHPortal.Common
 {
     public interface IStorageService
     {
-        Task<string> LoadJSON(string url);
-        Task SaveJSON(string url, string data);
+        Task<string> LoadJSON(RestAPIItem item);
+        Task SaveJSON(RestAPIItem item, string data);
 
         object GetSettingsEntry(string entryName);
         bool SetSettingsEntry(string entryName, object value);

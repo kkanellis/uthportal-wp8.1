@@ -4,8 +4,8 @@ namespace UTHPortal.Common
 {
     public interface IPushService
     {
-        void RegisterUrl(string url);
-        void UnregisterUrl(string url);
-        PushEvent IsRegistered(string url);
+        void Register(RestAPIItem item);
+        void Unregister(RestAPIItem item);
+        PushEvent IsRegistered(RestAPIItem item);
     }
 }
