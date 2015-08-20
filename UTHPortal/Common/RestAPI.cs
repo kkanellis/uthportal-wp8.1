@@ -1,53 +1,155 @@
-﻿namespace UTHPortal.Common
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UTHPortal.Models;
+
+namespace UTHPortal.Common
 {
-    public class RestAPI
+    public static class RestAPI
     {
-        public static string baseUrl = "http://sfi.ddns.net/test/uthportal/api/v1/info/";
+        private static List<RestAPIItem> Items;
+        private static string baseUrl = "http://sfi.ddns.net/test/uthportal/api/v1/info/";
 
-        #region Inf 
-        private static string InfDeptUrl_ = baseUrl + "inf/";
-        private static string InfDeptAnnounceUrl_ = InfDeptUrl_ + "announce/";
-        public static string InfDeptAnnounceUrl = InfDeptAnnounceUrl_;
+        public static void Initialize()
+        {
+            Items = new List<RestAPIItem>();
 
+            #region Inf
+            Items.Add(new RestAPIItem(typeof(CourseAnnounceModel), "inf/announce/", null));
+            Items.Add(new RestAPIItem(typeof(CourseAllModel), "inf/courses/", "?exclude=announcements"));
 
-        private static string InfDeptCoursesUrl_ = InfDeptUrl_ + "courses/";
-        public  static string InfDeptCoursesUrl = InfDeptCoursesUrl_ + "?exclude=announcements";
+            Items.Add(new RestAPIItem(typeof(CourseModel), "inf/courses/{0}", null, "({0}) {1} [{2}]", new string [] { "Info.codeSite", "Name", "Source" }));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/general", null, "γενικές ανακοινώσεις"));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/undergraduate", null, "προπτυχιακών"));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/academic", null, "ακαδημαϊκά νέα"));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/scholarships", null, "υποτροφίες"));
 
-        public static string InfDeptCourseStr = "({0}) {1} [{2}]"; // codeSite, name, [source] 
-        public static string InfDeptCourseUrl = InfDeptCoursesUrl_ + "{0}";
+            #endregion
 
-        public static string InfDeptAnnouncementsGeneralStr = "γενικές ανακοινώσεις";
-        public static string InfDeptAnnouncementsGeneralUrl = InfDeptAnnounceUrl_ + "general";
+            #region Uth
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/announce/news", null, "νέα πανεπιστημίου"));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/announce/events", null, "εκδηλώσεις πανεπιστημίου"));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/announce/foodmenu", null));
+            
+            #endregion
+        }
 
-        public static string InfDeptAnnouncementsUndergraduatesStr = "προπτυχιακών";
-        public static string InfDeptAnnouncementsUndergraduatesUrl = InfDeptAnnounceUrl_ + "undergraduates";
+        public static RestAPIItem GetItem(string collection)
+        {
+            return Items.Find(item => item.Collection == collection);
+        }
 
-        public static string InfDeptAnnouncementsAcademicStr = "ακαδημαϊκά νέα";
-        public static string InfDeptAnnouncementsAcademicUrl = InfDeptAnnounceUrl_ + "academic";
+        /// <summary>
+        /// Removes the baseUrl and any (possible) parameters from the url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static string GetFullUrl(string url)
+        {
+            return baseUrl + url;
+        }
+    }
 
-        public static string InfDeptAnnouncementsScholarshipsStr = "υποτροφίες";
-        public static string InfDeptAnnouncementsScholarshipsUrl = InfDeptAnnounceUrl_ + "scholarships";
+    public class RestAPIItem
+    {
+        public string Url { get; set; }
+        public string RequestUrl { get; set; }
+        public string RequestParams { get; set; }
+        public string Collection { get; set; }
 
-        #endregion
+        public Type ModelType;
+        public string[] DisplayParams { get; set; }
+        public string DisplayFormat { get; set; }
 
-        #region Uth
-        private static string UthUrl = baseUrl + "uth/";
-        public static string UthAnnouncementsUrl = UthUrl + "announce/";
+        public RestAPIItem(Type modelType, string url, string requestParams, string displayFormat, string[] displayParams)
+        {
+            this.ModelType = modelType;
+            this.Url = url;
+            this.RequestUrl = RestAPI.GetFullUrl(url);
+            this.RequestParams = requestParams;
+            this.DisplayFormat = DisplayFormat;
+            this.DisplayParams = displayParams;
 
-        public static string UniversityNewsStr = "νέα πανεπιστημίου";
-        public static string UniversityNewsUrl = UthAnnouncementsUrl + "news";
+            this.Collection = String.Format(Url, string.Empty).Replace('/', '.');
+        }
 
-        public static string UniversityEventsStr = "εκδηλώσεις πανεπιστημίου";
-        public static string UniversityEventsUrl = UthAnnouncementsUrl + "events";
+        public RestAPIItem(Type modelType, string url, string requestParams, string displayFormat) :
+            this(modelType, url, requestParams, displayFormat, null)
+        { }
 
-        public static string UniversityFoodmenuUrl = UthUrl + "foodmenu";
+        public RestAPIItem(Type modelType, string url, string requestParams) :
+            this(modelType, url, requestParams, null, null)
+        { }
 
-        #endregion
+        /// <summary>
+        /// Specializes the RestAPIItem from a generic url, to a specific one
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public RestAPIItem Specialize(params string [] args)
+        {
+            return new RestAPIItem(
+                ModelType,
+                string.Format(RequestUrl, args),
+                RequestParams,
+                DisplayFormat,
+                DisplayParams
+                );
+        }
 
-        #region Misc
-        public static string FeedbackUrl = baseUrl + "/feedback";
+        /// <summary>
+        /// Returns the string representation of this REST Item using the provided model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public string ToString(object model)
+        {
+            if(model.GetType() == ModelType) {
 
-        #endregion
+                if (DisplayParams.Length > 0) {
+                    string [] displayValues = new string [DisplayParams.Length];
+                    for (int i = 0; i < displayValues.Length; i++) {
+                        object value = GetNestedPropertyValue(model, DisplayParams [i]);
+
+                        if (value == null) return string.Empty;
+
+                        displayValues [i] = value.ToString();
+                    }
+                    return string.Format(DisplayFormat, displayValues);
+                }
+                else if (DisplayFormat != null) {
+                    return DisplayFormat;
+                }
+                else return string.Empty;
+            }
+            else {
+                throw new InvalidCastException();
+            }
+        }
+
+        /// <summary>
+        /// Returns the value of the nested property of the provided object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="dottedPropertyName"></param>
+        /// <returns></returns>
+        private object GetNestedPropertyValue(object obj, string dottedPropertyName)
+        {
+            foreach(string propertyName in dottedPropertyName.Split('.')) {
+                if (obj == null) {
+                    return null;
+                }
+
+                Type objType = obj.GetType();
+                PropertyInfo info = objType.GetRuntimeProperty(propertyName);
+                if (info == null) {
+                    return null;
+                }
+
+                obj = info.GetValue(obj);
+            }
+            return obj;
+        }
 
     }
 }
