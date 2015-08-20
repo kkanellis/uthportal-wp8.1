@@ -14,23 +14,22 @@ namespace UTHPortal.Common
             storageService = SimpleIoc.Default.GetInstance<IStorageService>();
         }
 
-        public void RegisterUrl(string url)
+        public void Register(RestAPIItem item)
         {
-            PushEvent pushEvent;
-            if ((pushEvent = IsRegistered(url)) == null) {
+            if (IsRegistered(item) == null) {
                 // TODO: Make necessary connections to server in order
                 //       ensure that the events is registered to client
 
                 var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
-                activePushEvents.Add(pushEvent);
+                activePushEvents.Add(new PushEvent(item.Url, item.Collection));
                 storageService.SetSettingsEntry("ActivePushEvents", activePushEvents);
             }
         }
 
-        public void UnregisterUrl(string url)
+        public void Unregister(RestAPIItem item)
         {
             PushEvent pushEvent;
-            if ( (pushEvent = IsRegistered(url)) != null) {
+            if ( (pushEvent = IsRegistered(item)) != null) {
                 // TODO: Make necessary connections to server in order
                 //       ensure that the events is registered to client
 
@@ -40,17 +39,11 @@ namespace UTHPortal.Common
             }
         }
 
-        public PushEvent IsRegistered(string url)
+        public PushEvent IsRegistered(RestAPIItem item)
         {
             var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
-            url = getEventName(url);
 
-            return activePushEvents.Find(activeEvent => activeEvent.Url == url);
-        }
-
-        private string getEventName(string url)
-        {
-            return url.Substring(RestAPI.baseUrl.Length).Replace('/', '.');
+            return activePushEvents.Find(activeEvent => activeEvent.Url == item.Url);
         }
     }
 }

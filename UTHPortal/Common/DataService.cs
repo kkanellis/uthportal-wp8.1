@@ -17,47 +17,42 @@ namespace UTHPortal.Common
 {
     public class DataService : IDataService
     {
-        private ILoggerService loggerService;
         private readonly TimeSpan timeoutMilliSecs;
+
+        private IStorageService storageService;
+        private ILoggerService loggerService;
 
         public DataService()
         {
             timeoutMilliSecs = new TimeSpan(0, 0, 15);
+
+            storageService = SimpleIoc.Default.GetInstance<IStorageService>();
             loggerService = SimpleIoc.Default.GetInstance<ILoggerService>();
         }
 
-        public async Task<Object> Refresh(string url, Type modelType)
+        public async Task<object> Refresh(RestAPIItem item, Type modelType)
         {
             if (IsNetworkAvailable())
             {
-                var json = await GetData(url).ConfigureAwait(false);
+                var json = await GetData(item.RequestUrl, item.RequestParams).ConfigureAwait(false);
                 return ParseJson(json, modelType);
             }
             return null;
         }
 
-        public async Task<Object> RefreshAndSave(string url, Type modelType)
+        public async Task<object> RefreshAndSave(RestAPIItem item, Type modelType)
         {
             if (IsNetworkAvailable())
             {
-                var json = await GetData(url).ConfigureAwait(false);
+                var json = await GetData(item.RequestUrl, item.RequestParams).ConfigureAwait(false);
 
-                var storageService = SimpleIoc.Default.GetInstance<IStorageService>();
-                await storageService.SaveJSON(url, json);
-
+                await storageService.SaveJSON(item, json);
                 return ParseJson(json, modelType);
             }
             return null;
         }
 
-        public async Task<bool> SendFeedback(string message)
-        {
-            List<KeyValuePair<string, string>> values = new List<KeyValuePair<string, string>>();
-            values.Add(new KeyValuePair<string, string>("message", message));
-
-            return await PostData(RestAPI.FeedbackUrl, new FormUrlEncodedContent(values));
-        }
-
+        /*
         private async Task<bool> PostData(string url, FormUrlEncodedContent content)
         {
             using (HttpClient client = new HttpClient())
@@ -77,17 +72,23 @@ namespace UTHPortal.Common
             }
             return false;
         }
+        */
 
-        private async Task<string> GetData(string url)
+        private async Task<string> GetData(string url, string parameters)
         {
-            String json = null;
+            string json = null;
 
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
+                    var requestUrl = url;
+                    if (!string.IsNullOrWhiteSpace(parameters)) {
+                        requestUrl += parameters;
+                    }
+
                     client.Timeout = timeoutMilliSecs;
-                    HttpResponseMessage response = await client.GetAsync(url);
+                    HttpResponseMessage response = await client.GetAsync(requestUrl);
                     response.EnsureSuccessStatusCode();
 
                     json = await response.Content.ReadAsStringAsync();
@@ -101,7 +102,13 @@ namespace UTHPortal.Common
             return json;
         }
 
-        public Object ParseJson(string json, Type modelType)
+        public void CancelAllRequests()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public object ParseJson(string json, Type modelType)
         {
             object data = null;
             try
@@ -118,5 +125,16 @@ namespace UTHPortal.Common
         {
             return NetworkInterface.GetIsNetworkAvailable();
         }
+
+        /*
+        public async Task<bool> SendFeedback(string message)
+        {
+            List<KeyValuePair<string, string>> values = new List<KeyValuePair<string, string>>();
+            values.Add(new KeyValuePair<string, string>("message", message));
+
+            return await PostData(RestAPI.FeedbackUrl, new FormUrlEncodedContent(values));
+        }
+        */
+
     }
 }

@@ -42,6 +42,8 @@ namespace UTHPortal.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
+            RestAPI.Initialize(); 
+
             SimpleIoc.Default.Register<IDataService, DataService>();
             SimpleIoc.Default.Register<IStorageService, StorageService>();
             SimpleIoc.Default.Register<IPushService, PushService>();

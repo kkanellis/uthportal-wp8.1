@@ -44,7 +44,7 @@ namespace UTHPortal.Common
         }
 
         #region RestApi
-        public async Task SaveJSON(string url, string data)
+        public async Task SaveJSON(RestAPIItem item, string data)
         {
             /* RestAPI data are saved in files inside 'RestAPI' folder
              * with the following format:
@@ -52,10 +52,8 @@ namespace UTHPortal.Common
              * file:    RestAPI/uth-rss-news
              */
 
-            if (url != null && data != null)
-            {
-                string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
-                await SaveData(restFolder, filename, data).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(item.Url) && !string.IsNullOrEmpty(data)) {
+                await SaveData(restFolder, item.Filename, data).ConfigureAwait(false);
             }
         }
 
@@ -72,7 +70,7 @@ namespace UTHPortal.Common
             }
         }
 
-        public async Task<string> LoadJSON(string url)
+        public async Task<string> LoadJSON(RestAPIItem item)
         {
             /* RestAPI data are saved in files inside 'RestAPI' folder
              * with the following format:
@@ -80,10 +78,8 @@ namespace UTHPortal.Common
              * file:    RestAPI/uth-rss-news
              */
 
-            if (url != null)
-            {
-                string filename = SanitizeUrl(url.Substring(RestAPI.baseUrl.Length));
-                return await LoadData(restFolder, filename).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(item.Url)) {
+                return await LoadData(restFolder, item.Filename).ConfigureAwait(false);
             }
             return null;
         }
@@ -117,23 +113,6 @@ namespace UTHPortal.Common
                 currentFolder = nextFolder;
             }
             return currentFolder;
-        }
-
-        private string SanitizeUrl(string url)
-        {
-            string bannedChars = "?=,/";
-            char replaceChar = '-';
-
-            StringWriter filename = new StringWriter();
-            foreach (char c in url) {
-                if (bannedChars.IndexOf(c) >= 0) {
-                    filename.Write(replaceChar);
-                }
-                else {
-                    filename.Write(c);
-                }
-            }
-            return filename.ToString();
         }
 
         #endregion
