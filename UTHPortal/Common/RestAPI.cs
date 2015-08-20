@@ -29,7 +29,7 @@ namespace UTHPortal.Common
             #region Uth
             Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/announce/news", null, "νέα πανεπιστημίου"));
             Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/announce/events", null, "εκδηλώσεις πανεπιστημίου"));
-            Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/announce/foodmenu", null));
+            Items.Add(new RestAPIItem(typeof(AnnounceModel), "uth/foodmenu", null));
             
             #endregion
         }
@@ -71,7 +71,7 @@ namespace UTHPortal.Common
             this.DisplayFormat = DisplayFormat;
             this.DisplayParams = displayParams;
 
-            this.Collection = string.Format(Url, string.Empty).Replace('/', '.');
+            this.Collection = GetCollection(url);
             this.Filename = Collection.Replace('.', '-');
         }
 
@@ -92,7 +92,7 @@ namespace UTHPortal.Common
         {
             return new RestAPIItem(
                 ModelType,
-                string.Format(RequestUrl, args),
+                string.Format(Url, args),
                 RequestParams,
                 DisplayFormat,
                 DisplayParams
@@ -153,5 +153,18 @@ namespace UTHPortal.Common
             return obj;
         }
 
+        private string GetCollection(string url)
+        {
+            // Distinguish uth / and /id
+            if (url.EndsWith("/")) {
+                // Remove last '/'
+                url = url.Substring(0, url.Length - 1);
+            }
+            else {
+                url = string.Format(url, string.Empty);
+            }
+
+            return url.Replace('/', '.');
+        }
     }
 }

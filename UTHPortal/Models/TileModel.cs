@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UTHPortal.Common;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -14,9 +15,9 @@ namespace UTHPortal.Models
     {
         public string Label { get; set; }
         public BitmapImage ImageSource { get; set; }
-        public string Url { get; set; }
+        public RestAPIItem Info { get; set; }
 
-        public RelayCommand<string> Click { get; set; }
+        public RelayCommand<RestAPIItem> Click { get; set; }
         public bool IsImplemented { get; set; }
     }
 }

@@ -87,7 +87,7 @@ namespace UTHPortal.ViewModel
 
                             Courses = new ObservableCollection<Pair<bool, CourseModel>>();
 
-                            var coursesRestItem = RestAPI.GetItem("inf.courses.");
+                            var coursesRestItem = RestAPI.GetItem("inf.courses");
                             Debug.Assert(coursesRestItem != null, "Can't find saved courses list");
 
                             string json = await storageService.LoadJSON(coursesRestItem);
