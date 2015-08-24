@@ -1,4 +1,4 @@
-using GalaSoft.MvvmLight;
+ο»Ώusing GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using System.Collections.ObjectModel;
@@ -31,73 +31,79 @@ namespace UTHPortal.ViewModel
         private IViewService viewService;
         private IDataService dataService;
 
+        public List<AnnounceEx> Newsfeed
+        {
+            get { return _newsfeed; }
+            set { Set(() => Newsfeed, ref _newsfeed, value); }
+        }
+        private List<AnnounceEx> _newsfeed;
 
-        public ObservableCollection<TileModel> UniversityButtonList
+
+        public ObservableCollection<MainListItem> UniversityButtonList
         {
             get { return _universityButtonList; }
             set { Set(() => UniversityButtonList, ref _universityButtonList, value); }
         }
-        private ObservableCollection<TileModel> _universityButtonList;
+        private ObservableCollection<MainListItem> _universityButtonList;
 
-
-        public ObservableCollection<TileModel> DeptButtonList
+        public ObservableCollection<MainListItem> DeptButtonList
         {
             get { return _deptButtonList; }
             set { Set(() => DeptButtonList, ref _deptButtonList, value); }
         }
-        private ObservableCollection<TileModel> _deptButtonList;
+        private ObservableCollection<MainListItem> _deptButtonList;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public MainViewModel()
         {
-            UniversityButtonList = new ObservableCollection<TileModel>();
+            UniversityButtonList = new ObservableCollection<MainListItem>();
 
-            UniversityButtonList.Add(new TileModel() {
-                Label = "Ανακοινώσεις",
+            UniversityButtonList.Add(new MainListItem() {
+                Label = "Ξ‘Ξ½Ξ±ΞΊΞΏΞΉΞ½ΟΟƒΞµΞΉΟ‚",
                 Info = RestAPI.GetItem("uth.announce.news"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
-            UniversityButtonList.Add(new TileModel() {
-                Label = "Ειδήσεις",
+            UniversityButtonList.Add(new MainListItem() {
+                Label = "Ξ•ΞΉΞ΄Ξ®ΟƒΞµΞΉΟ‚",
                 Info = RestAPI.GetItem("uth.announce.news"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.newspaper.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
-            UniversityButtonList.Add(new TileModel() {
-                Label = "Εκδηλώσεις",
+            UniversityButtonList.Add(new MainListItem() {
+                Label = "Ξ•ΞΊΞ΄Ξ·Ξ»ΟΟƒΞµΞΉΟ‚",
                 Info = RestAPI.GetItem("uth.announce.events"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.calendar.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
-            UniversityButtonList.Add(new TileModel(){
-                Label = "Μενού Λέσχης",
+            UniversityButtonList.Add(new MainListItem(){
+                Label = "ΞΞµΞ½ΞΏΟ Ξ›Ξ­ΟƒΟ‡Ξ·Ο‚",
                 Info = RestAPI.GetItem("uth.foodmenu"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.food.silverware.cross.png", UriKind.Absolute)),
                 Click = ShowFoodmenu,
                 IsImplemented = true
             });
-            UniversityButtonList.Add(new TileModel(){
-                Label = "Πληροφορίες",
+            UniversityButtonList.Add(new MainListItem(){
+                Label = "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚",
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.information.png", UriKind.Absolute)),
                 IsImplemented = false
             });
 
-            DeptButtonList = new ObservableCollection<TileModel>();
-            DeptButtonList.Add(new TileModel(){
-                Label = "Ανακοινώσεις",
+            DeptButtonList = new ObservableCollection<MainListItem>();
+            DeptButtonList.Add(new MainListItem(){
+                Label = "Ξ‘Ξ½Ξ±ΞΊΞΏΞΉΞ½ΟΟƒΞµΞΉΟ‚",
                 Info = RestAPI.GetItem("inf.announce.general"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.social.uservoice.png", UriKind.Absolute)),
                 Click = UniversityAnnounceClick,
                 IsImplemented = true
             });
-            DeptButtonList.Add(new TileModel(){
-                Label = "Μαθήματα",
+            DeptButtonList.Add(new MainListItem(){
+                Label = "ΞΞ±ΞΈΞ®ΞΌΞ±Ο„Ξ±",
                 Info = RestAPI.GetItem("inf.courses"),
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/appbar.book.hardcover.open.png", UriKind.Absolute)),
                 Click = CourseListClick,
@@ -136,18 +142,18 @@ namespace UTHPortal.ViewModel
                             bool firstLaunched = (bool)storageService.GetSettingsEntry("FirstLaunched");
                             if (firstLaunched == false) {
                                 await viewService.ShowMessageDialog(
-                                    "Η εφαρμόγή θα χρειαστεί πρόσβαση στο Internet, λόγω της πρώτης εκτέλεσης. \n\nΠαρακαλούμε βεβαιωθείτε πως υπάρχει ενεργή σύνδεση.", "Καλωσήρθατε!");
+                                    "Ξ— ΞµΟ†Ξ±ΟΞΌΟΞ³Ξ® ΞΈΞ± Ο‡ΟΞµΞΉΞ±ΟƒΟ„ΞµΞ― Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ· ΟƒΟ„ΞΏ Internet, Ξ»ΟΞ³Ο‰ Ο„Ξ·Ο‚ Ο€ΟΟΟ„Ξ·Ο‚ ΞµΞΊΟ„Ξ­Ξ»ΞµΟƒΞ·Ο‚. \n\nΞ Ξ±ΟΞ±ΞΊΞ±Ξ»ΞΏΟΞΌΞµ Ξ²ΞµΞ²Ξ±ΞΉΟ‰ΞΈΞµΞ―Ο„Ξµ Ο€Ο‰Ο‚ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞµΞ½ΞµΟΞ³Ξ® ΟƒΟΞ½Ξ΄ΞµΟƒΞ·.", "ΞΞ±Ξ»Ο‰ΟƒΞ®ΟΞΈΞ±Ο„Ξµ!");
 
                                 // Try to get all courses //
                                 var restItem = RestAPI.GetItem("inf.courses");
                                 if (await dataService.RefreshAndSave(restItem, typeof(CourseAllModel)) == null) {
                                     await viewService.ShowMessageDialog(
-                                        "Δυστυχώς δεν ήταν δυνατή η επικοινωνία με τον server.\n\nΣυνδεθείτε στο Internet και προσπαθήστε αργότερα.", "Πρόβλημα σύνδεσης");
+                                        "Ξ”Ο…ΟƒΟ„Ο…Ο‡ΟΟ‚ Ξ΄ΞµΞ½ Ξ®Ο„Ξ±Ξ½ Ξ΄Ο…Ξ½Ξ±Ο„Ξ® Ξ· ΞµΟ€ΞΉΞΊΞΏΞΉΞ½Ο‰Ξ½Ξ―Ξ± ΞΌΞµ Ο„ΞΏΞ½ server.\n\nΞ£Ο…Ξ½Ξ΄ΞµΞΈΞµΞ―Ο„Ξµ ΟƒΟ„ΞΏ Internet ΞΊΞ±ΞΉ Ο€ΟΞΏΟƒΟ€Ξ±ΞΈΞ®ΟƒΟ„Ξµ Ξ±ΟΞ³ΟΟ„ΞµΟΞ±.", "Ξ ΟΟΞ²Ξ»Ξ·ΞΌΞ± ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚");
                                     App.Current.Exit();
                                 }
                                 else {
                                     storageService.SetSettingsEntry("FirstLaunched", true);
-                                    await viewService.ShowMessageDialog("Επιτυχής σύνδεση με server! Παρακαλούμε επιλέξτε τις ρυθμίσεις που θέλετε.\n\nΠεριμένουμε τις προτάσεις σας!\n-- Developer team", "Καλώσήρθατε!");
+                                    await viewService.ShowMessageDialog("Ξ•Ο€ΞΉΟ„Ο…Ο‡Ξ®Ο‚ ΟƒΟΞ½Ξ΄ΞµΟƒΞ· ΞΌΞµ server! Ξ Ξ±ΟΞ±ΞΊΞ±Ξ»ΞΏΟΞΌΞµ ΞµΟ€ΞΉΞ»Ξ­ΞΎΟ„Ξµ Ο„ΞΉΟ‚ ΟΟ…ΞΈΞΌΞ―ΟƒΞµΞΉΟ‚ Ο€ΞΏΟ… ΞΈΞ­Ξ»ΞµΟ„Ξµ.\n\nΞ ΞµΟΞΉΞΌΞ­Ξ½ΞΏΟ…ΞΌΞµ Ο„ΞΉΟ‚ Ο€ΟΞΏΟ„Ξ¬ΟƒΞµΞΉΟ‚ ΟƒΞ±Ο‚!\n-- Developer team", "ΞΞ±Ξ»ΟΟƒΞ®ΟΞΈΞ±Ο„Ξµ!");
                                     navigationService.NavigateTo(typeof(AppSettingsView));
                                 }
                             }

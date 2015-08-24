@@ -151,7 +151,7 @@
     </Compile>
     <Compile Include="Common\DataService.cs" />
     <Compile Include="Common\IDataService.cs" />
-    <Compile Include="Models\TileModel.cs" />
+    <Compile Include="Models\MainListItem.cs" />
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\UniversityRssModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

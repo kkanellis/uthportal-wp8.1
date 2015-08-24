@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace UTHPortal.Models
 {
-    public class TileModel : ObservableObject
+    public class MainListItem : ObservableObject
     {
         public string Label { get; set; }
         public BitmapImage ImageSource { get; set; }
