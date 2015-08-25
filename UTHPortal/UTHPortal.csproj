@@ -107,16 +107,13 @@
     <Compile Include="Common\PushService.cs" />
     <Compile Include="Common\RestAPI.cs" />
     <Compile Include="Common\StorageService.cs" />
-    <Compile Include="Common\Controls\ImageButton.xaml.cs">
-      <DependentUpon>ImageButton.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Common\Util.cs" />
     <Compile Include="Common\ViewService.cs" />
     <Compile Include="Common\WebViewHelper.cs" />
     <Compile Include="Models\AnnounceModel.cs" />
     <Compile Include="Models\CourseAnnounceModel.cs" />
     <Compile Include="Models\CourseModel.cs" />
     <Compile Include="Models\FoodmenuModel.cs" />
-    <Compile Include="Models\InfAnnounceModel.cs" />
     <Compile Include="Models\AppSettingsModel.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnnounceListDetailsViewModel.cs" />
@@ -151,8 +148,6 @@
     <Compile Include="Common\DataService.cs" />
     <Compile Include="Common\IDataService.cs" />
     <Compile Include="Models\MainListItem.cs" />
-    <Compile Include="Models\MainModel.cs" />
-    <Compile Include="Models\UniversityRssModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\AnnounceListDetailsView.xaml.cs">
       <DependentUpon>AnnounceListDetailsView.xaml</DependentUpon>
@@ -196,10 +191,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Common\Controls\ImageButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
