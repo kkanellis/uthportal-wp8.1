@@ -118,7 +118,6 @@
     <Compile Include="Models\FoodmenuModel.cs" />
     <Compile Include="Models\InfAnnounceModel.cs" />
     <Compile Include="Models\AppSettingsModel.cs" />
-    <Compile Include="Models\PushEvent.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnnounceListDetailsViewModel.cs" />
     <Compile Include="ViewModel\AnnounceListViewModel.cs" />

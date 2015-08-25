@@ -7,6 +7,8 @@ namespace UTHPortal.Common
 {
     public class PushService : IPushService
     {
+        public const string notificationSettingsStr = "NotificationItems";
+
         IStorageService storageService;
 
         public PushService()
@@ -16,34 +18,33 @@ namespace UTHPortal.Common
 
         public void Register(RestAPIItem item)
         {
-            if (IsRegistered(item) == null) {
+            if ( !IsRegistered(item)) {
                 // TODO: Make necessary connections to server in order
                 //       ensure that the events is registered to client
 
-                var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
-                activePushEvents.Add(new PushEvent(item.Url, item.Collection));
-                storageService.SetSettingsEntry("ActivePushEvents", activePushEvents);
+                var notifications = (List<RestAPIItem>)storageService.GetSettingsEntry(notificationSettingsStr);
+                notifications.Add(item);
+                storageService.SetSettingsEntry(notificationSettingsStr, notifications);
             }
         }
 
         public void Unregister(RestAPIItem item)
         {
-            PushEvent pushEvent;
-            if ( (pushEvent = IsRegistered(item)) != null) {
+            if ( IsRegistered(item))  {
                 // TODO: Make necessary connections to server in order
                 //       ensure that the events is registered to client
 
-                var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
-                activePushEvents.Remove(pushEvent);
-                storageService.SetSettingsEntry("ActivePushEvents", activePushEvents);
+                var notifications = (List<RestAPIItem>)storageService.GetSettingsEntry(notificationSettingsStr);
+                notifications.RemoveAll(notification => notification.Url == item.Url);
+                storageService.SetSettingsEntry(notificationSettingsStr, notifications);
             }
         }
 
-        public PushEvent IsRegistered(RestAPIItem item)
+        public bool IsRegistered(RestAPIItem item)
         {
-            var activePushEvents = (List<PushEvent>)storageService.GetSettingsEntry("ActivePushEvents");
+            var notifications = (List<RestAPIItem>)storageService.GetSettingsEntry(notificationSettingsStr);
 
-            return activePushEvents.Find(activeEvent => activeEvent.Url == item.Url);
+            return notifications.Exists(notification => notification.Url == item.Url);
         }
     }
 }

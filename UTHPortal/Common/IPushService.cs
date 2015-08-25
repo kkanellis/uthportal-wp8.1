@@ -6,6 +6,6 @@ namespace UTHPortal.Common
     {
         void Register(RestAPIItem item);
         void Unregister(RestAPIItem item);
-        PushEvent IsRegistered(RestAPIItem item);
+        bool IsRegistered(RestAPIItem item);
     }
 }
