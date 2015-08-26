@@ -172,27 +172,40 @@ namespace UTHPortal.Common
             return value;
         }
 
-        /** XML Helpers **/
-        /* Forced to used XML Serialization cause of List<T> not being 
-         * serializable by the default serializer
-         */
+        /// <summary>
+        /// Serializes object to string using BinaryFormatter
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private string SerializeToString(object obj)
         {
             XmlSerializer serializer = new XmlSerializer(obj.GetType());
+            string serializedString = string.Empty;
+
             using (StringWriter writer = new StringWriter())
             {
                 serializer.Serialize(writer, obj);
-                return writer.ToString();
+                serializedString = writer.ToString();
             }
+            return serializedString;
         }
 
+        /// <summary>
+        /// Deserializes object from string using BinaryFormatter
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xml"></param>
+        /// <returns></returns>
         private T DeserializeFromString<T>(string xml)
         {
             XmlSerializer deserializer = new XmlSerializer(typeof(T));
+            T deserializedObject = default(T);
+
             using (StringReader reader = new StringReader(xml))
             {
-                return (T)deserializer.Deserialize(reader);
+                deserializedObject = (T)deserializer.Deserialize(reader);
             }
+            return deserializedObject;
         }
 
         #endregion
