@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
 using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
 
@@ -8,14 +8,13 @@ namespace UTHPortal.Models
 {
     public class AnnounceModel : ObservableObject
     {
-        private ObservableCollection<Announce> _Entries;
-
         [JsonProperty("entries")]
-        public virtual ObservableCollection<Announce> Entries
+        public IList<Announce> Entries
         {
-            get { return _Entries; }
-            set { Set(() => Entries, ref _Entries, value); }
+            get { return _entries; }
+            set { Set(() => Entries, ref _entries, value); }
         }
+        private IList<Announce> _entries;
 
         [JsonProperty("title")]
         public string Title { get; set; }
@@ -28,7 +27,15 @@ namespace UTHPortal.Models
 
         [JsonProperty("link")]
         public string Link { get; set; }
-       
+
+        public List<AnnounceEx> GetAnnouncements(string displayFormat, string displayParams)
+        {
+            var items = new List<AnnounceEx>();
+            foreach(var entry in Entries) {
+                items.Add(new AnnounceEx(entry, string.Format(displayFormat, displayParams)));
+            }
+            return items;
+        }
     }
 
     public class Announce
@@ -56,8 +63,8 @@ namespace UTHPortal.Models
     {
         public AnnounceEx()
         { }
-
-        public AnnounceEx(Announce announce)
+        
+        public AnnounceEx(Announce announce, string source)
         {
             // TODO: Find a better way for this!
             Date = announce.Date;
@@ -66,7 +73,13 @@ namespace UTHPortal.Models
             Link = announce.Link;
             Plaintext = announce.Plaintext;
             Title = announce.Title;
+
+            Source = source;
         }
+
+        public AnnounceEx(Announce announce) : 
+            this(announce, string.Empty)
+        { }
 
         // Can be site, eclass or email
         public string Source { get; set; }

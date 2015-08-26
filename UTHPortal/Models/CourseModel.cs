@@ -1,14 +1,14 @@
 ﻿using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Xml.Serialization;
+using System.Linq;
+using UTHPortal.Common;
 
 namespace UTHPortal.Models
 {
     public class CourseModel : ObservableObject
     {
-        /* Adding xmlignore to not serialize this part to LocalSettings */
-        [XmlIgnore()]
         [JsonProperty("announcements")]
         public CourseAnnounceModel Announcements { get; set; }
 
@@ -17,6 +17,28 @@ namespace UTHPortal.Models
 
         [JsonProperty("code")]
         public string Code { get; set; }
+
+        public List<AnnounceEx> GetAnnouncements(string displayFormat, string[] displayParams)
+        {
+            var items = new List<AnnounceEx>();
+
+            // TODO: Truncate strings
+            if (Announcements.Site != null) {
+                foreach(var announce in Announcements.Site) {
+                    var source = Util.ObjectToString(this, displayFormat, displayParams) + "[ιστοσελίδα]";
+                    items.Add(new AnnounceEx(announce, source));
+                }
+            }
+
+            if (Announcements.Eclass != null) {
+                foreach(var announce in Announcements.Eclass) {
+                    var source = Util.ObjectToString(this, displayFormat, displayParams) + "[eclass]";
+                    items.Add(new AnnounceEx(announce, source));
+                }
+            }
+
+            return items.OrderBy(announce => announce.Date).Reverse().ToList();
+        }
     }
 
     public class CourseAllModel : ObservableObject

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Xml.Serialization;
+using System.Runtime.Serialization;
 using UTHPortal.Models;
 
 namespace UTHPortal.Common
@@ -18,7 +20,7 @@ namespace UTHPortal.Common
             Items.Add(new RestAPIItem(typeof(CourseAnnounceModel), "inf/announce/", null));
             Items.Add(new RestAPIItem(typeof(CourseAllModel), "inf/courses/", "?exclude=announcements"));
 
-            Items.Add(new RestAPIItem(typeof(CourseModel), "inf/courses/{0}", null, "({0}) {1} [{2}]", new string [] { "Info.codeSite", "Name", "Source" }));
+            Items.Add(new RestAPIItem(typeof(CourseModel), "inf/courses/{0}", null, "{0} ", new string [] { "Info.Name" }));
             Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/general", null, "γενικές ανακοινώσεις"));
             Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/undergraduate", null, "προπτυχιακών"));
             Items.Add(new RestAPIItem(typeof(AnnounceModel), "inf/announce/academic", null, "ακαδημαϊκά νέα"));
@@ -58,17 +60,21 @@ namespace UTHPortal.Common
         public string Collection { get; set; }
         public string Filename { get; set; }
 
-        public Type ModelType;
+        public string ModelTypeName { get; set; }
+
         public string[] DisplayParams { get; set; }
         public string DisplayFormat { get; set; }
 
+        public RestAPIItem() { }
+
         public RestAPIItem(Type modelType, string url, string requestParams, string displayFormat, string[] displayParams)
         {
-            this.ModelType = modelType;
+            this.ModelTypeName = modelType.AssemblyQualifiedName;
+
             this.Url = url;
             this.RequestUrl = RestAPI.GetFullUrl(url);
             this.RequestParams = requestParams;
-            this.DisplayFormat = DisplayFormat;
+            this.DisplayFormat = displayFormat;
             this.DisplayParams = displayParams;
 
             this.Collection = GetCollection(url);
@@ -91,7 +97,7 @@ namespace UTHPortal.Common
         public RestAPIItem Specialize(params string [] args)
         {
             return new RestAPIItem(
-                ModelType,
+                Type.GetType(ModelTypeName),
                 string.Format(Url, args),
                 RequestParams,
                 DisplayFormat,
@@ -99,59 +105,7 @@ namespace UTHPortal.Common
                 );
         }
 
-        /// <summary>
-        /// Returns the string representation of this REST Item using the provided model
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public string ToString(object model)
-        {
-            if(model.GetType() == ModelType) {
-
-                if (DisplayParams.Length > 0) {
-                    string [] displayValues = new string [DisplayParams.Length];
-                    for (int i = 0; i < displayValues.Length; i++) {
-                        object value = GetNestedPropertyValue(model, DisplayParams [i]);
-
-                        if (value == null) return string.Empty;
-
-                        displayValues [i] = value.ToString();
-                    }
-                    return string.Format(DisplayFormat, displayValues);
-                }
-                else if (DisplayFormat != null) {
-                    return DisplayFormat;
-                }
-                else return string.Empty;
-            }
-            else {
-                throw new InvalidCastException();
-            }
-        }
-
-        /// <summary>
-        /// Returns the value of the nested property of the provided object
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="dottedPropertyName"></param>
-        /// <returns></returns>
-        private object GetNestedPropertyValue(object obj, string dottedPropertyName)
-        {
-            foreach(string propertyName in dottedPropertyName.Split('.')) {
-                if (obj == null) {
-                    return null;
-                }
-
-                Type objType = obj.GetType();
-                PropertyInfo info = objType.GetRuntimeProperty(propertyName);
-                if (info == null) {
-                    return null;
-                }
-
-                obj = info.GetValue(obj);
-            }
-            return obj;
-        }
+        
 
         private string GetCollection(string url)
         {
