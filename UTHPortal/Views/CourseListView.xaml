@@ -118,18 +118,27 @@
         </StackPanel>
         
         <Pivot Grid.Row="1">
-            <PivotItem Header="επιλεγμένα">
+            <PivotItem Header="επιλεγμένα"
+                       Margin="-10,-5,-10,0"
+                       >
                 <ScrollViewer>
                     <StackPanel Orientation="Vertical">
                         <ListView Grid.Row="1"
                               ItemsSource="{Binding SelectedCourses}"
                               ItemTemplate="{StaticResource CourseItemTemplate}"
                               >
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            
                         </ListView>
                         <TextBlock Text="Πηγαίνετε στις ρύθμίσεις για να επιλέξετε μαθήματα"
                                    TextWrapping="Wrap"
                                    Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
                                    Visibility="{Binding SelectedCourses.Count, Converter={StaticResource ListCountConverter}}"
+                                   Margin="30,10"
                                    >
                         </TextBlock>
                     </StackPanel>
@@ -181,7 +190,7 @@
                                    TextWrapping="Wrap"
                                    Style="{StaticResource ListViewEmptyStaticTextBlockStyle}"
                                    Visibility="{Binding GrouppedCourses.Count, Converter={StaticResource ListCountConverter}}"
-                                   Margin="30,0,20,0"
+                                   Margin="30,10"
                                    >
                             </TextBlock>-->
                              </SemanticZoom.ZoomedInView>
