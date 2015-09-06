@@ -9,6 +9,9 @@ using Windows.UI.Xaml.Media.Imaging;
 using System;
 using Windows.System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Linq;
 
 namespace UTHPortal.ViewModel
 {
@@ -154,14 +157,43 @@ namespace UTHPortal.ViewModel
                                 else {
                                     storageService.SetSettingsEntry("FirstLaunched", true);
                                     await viewService.ShowMessageDialog("Επιτυχής σύνδεση με server! Παρακαλούμε επιλέξτε τις ρυθμίσεις που θέλετε.\n\nΠεριμένουμε τις προτάσεις σας!\n-- Developer team", "Καλώσήρθατε!");
+                                    storageService.SetSettingsEntry("NotificationItems", new List<RestAPIItem>());
                                     navigationService.NavigateTo(typeof(AppSettingsView));
                                 }
                             }
+                            else {
+                                generateNewsFeed();
+                            }
+
                         }));
             }
         }
         private RelayCommand _pageLoaded;
 
+
+        private async void generateNewsFeed()
+        {
+            await viewService.ShowStatusBar(string.Empty, null);
+
+            var notificationItems = (List<RestAPIItem>)storageService.GetSettingsEntry(AppSettingsModel.notificationItemsStr);
+
+            Newsfeed = new List<AnnounceEx>();
+            foreach (var item in notificationItems) {
+                Type modelType = Type.GetType(item.ModelTypeName);
+
+                string json = await storageService.LoadJSON(item);
+
+                var model = Convert.ChangeType(dataService.ParseJson(json, modelType), modelType);
+                var getAnnouncementsMethod = modelType.GetTypeInfo().GetDeclaredMethod("GetAnnouncements");
+                var entries = (List<AnnounceEx>)getAnnouncementsMethod.Invoke(model, new object [] { item.DisplayFormat, item.DisplayParams });
+
+                Newsfeed.AddRange(entries);
+            }
+
+            Newsfeed = Newsfeed.OrderBy(announce => announce.Date).Reverse().ToList();
+
+            await viewService.HideStatusBar();
+        }
 
 
         public RelayCommand<RestAPIItem> UniversityAnnounceClick
